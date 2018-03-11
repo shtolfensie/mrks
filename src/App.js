@@ -7,6 +7,7 @@ import MainMenu from './MainMenu'
 import Subjects from './Subjects.js'
 import Marks from './Marks'
 import HomePage from './Home'
+import Tests from './Tests'
 
 class App extends Component {
 
@@ -78,6 +79,7 @@ class App extends Component {
           { activeItem === 'home' && <HomePage /> }
           { activeItem === 'marks' && <Marks subjects={subjects} /> }
           { activeItem === 'subjects' && <Subjects subjects={subjects} /> }
+          { activeItem === 'tests' && <Tests subjects={subjects} /> }
         </Grid.Column>
       </Grid>
     );
