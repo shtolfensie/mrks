@@ -158,9 +158,11 @@ class SubjectCard extends Component {
       <Card fluid>
           <Card.Content>
             <Card.Header>{name}</Card.Header>
-            <Card.Meta>{initials}</Card.Meta>
-            <Card.Description>
+            <Card.Meta>
+              {initials}
               <div>Teacher: {teacher}</div>
+            </Card.Meta>
+            <Card.Description>
               <div>I dont like this subject.</div>
             </Card.Description>
           </Card.Content>
