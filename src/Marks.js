@@ -4,6 +4,7 @@ import { List, Grid, Segment, Header, Button, Confirm, } from 'semantic-ui-react
 import { db } from './firebase'
 
 import MarkAddForm from './MarkAddForm'
+import DeleteButton from './DeleteButton'
 
 class Marks extends Component {
   constructor(props) {
@@ -101,12 +102,13 @@ class ConfirmDeleteModal extends Component {
   render() {
     return (
       <div>
-        <Button negative onClick={this.show}>{this.props.buttonContent}</Button>
+        {/* <Button negative onClick={this.show}>{this.props.buttonContent}</Button> */}
+        <DeleteButton onClick={this.show} />
         <Confirm
           open={this.state.open}
           cancelButton='Never mind'
           confirmButton="Yes"
-          onCancel={this.handleCancel}
+          onCancel={this.handleClose}
           onConfirm={this.handleConfirm}
         />
       </div>

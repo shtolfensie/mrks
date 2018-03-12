@@ -7,6 +7,7 @@ import { db } from './firebase'
 
 import SubjectAddForm from './SubjectAddForm'
 import MarkAddForm from './MarkAddForm'
+import DeleteButton from './DeleteButton'
 
 function round(value, decimals) {
   return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
@@ -172,17 +173,12 @@ class SubjectCard extends Component {
           <Card.Content extra>
           <Button.Group fluid widths='2' >
             <MarkAddForm fromSubjectCard subjects={[{ name, key: id, initials, teacher }]}/>
-            <Button animated='fade' basic color='blue' onClick={() => handleDelete(id)}>
-              <Button.Content visible>Delete</Button.Content>
-              <Button.Content hidden><Icon name='trash outline'/></Button.Content>
-            </Button>
+            <DeleteButton onClick={() => handleDelete(id)} />
           </Button.Group>
           </Card.Content>
         </Card>
     );
   }
-  
-
 }
 
 export default Subjects;

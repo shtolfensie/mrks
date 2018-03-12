@@ -21,7 +21,7 @@ class MainMenu extends Component {
     } = this.props;
 
     return(
-      <Menu vertical fixed='left'  style={this.styles.mainMenu}>
+      <Menu vertical fixed='left' color='red'  style={this.styles.mainMenu}>
         <Menu.Item><Header color='red'>mrks</Header></Menu.Item>
         <Menu.Item name='home' style={this.styles.mainMenuButtons} active={activeItem === 'home'} onClick={handleItemClick}>
           Home

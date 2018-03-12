@@ -45,12 +45,13 @@ class TestAddForm extends Component {
       subjectId,
     } = this.state;
 
-    if (name === '' || subjectId === '') {
+    if (name === '' || subjectId === '' || dueDate === '') {
       this.setState({ isError: true });
     }
     else {
       const test = {
         name,
+        dueDate,
         timestamp: new Date().valueOf(),
         subjectInitials: this.getSubjectInitials(subjectId),
         subjectId,
