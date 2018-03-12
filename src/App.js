@@ -17,11 +17,13 @@ class App extends Component {
     this.state = {
       activeItem: 'subjects',
       subjects: [],
+      tests: [],
     }
   }
 
   componentWillMount() {
     this.getAllSubjects();
+    this.getAllTests();
   }
 
   getAllSubjects = () => {
@@ -39,6 +41,26 @@ class App extends Component {
       this.setState({ subjects });
       subjects = [];
     })
+  }
+
+  getAllTests = () => {
+    let testsArr = [];
+    db.ref('/marks-app/tests').orderByKey().on('value', snapshot => {
+      snapshot.forEach(test => {
+        testsArr.push({
+          name: test.val().name,
+          dueDate: test.val().dueDate,
+          subjectId: test.val().subjectId,
+          subjectInitials: test.val().subjectInitials,
+          timestamp: test.val().timestamp,
+          key: test.key,
+        }); 
+      });
+      this.setState({ tests: testsArr });
+      console.log(this.state.tests);
+      
+      testsArr = [];
+    });
   }
 
   handleMenuItemClick = (e, {name}) => {
@@ -59,7 +81,8 @@ class App extends Component {
 
     const {
       activeItem,
-      subjects
+      subjects,
+      tests,
     } = this.state;
 
     return (
@@ -78,8 +101,8 @@ class App extends Component {
         <Grid.Column width={13}>
           { activeItem === 'home' && <HomePage /> }
           { activeItem === 'marks' && <Marks subjects={subjects} /> }
-          { activeItem === 'subjects' && <Subjects subjects={subjects} /> }
-          { activeItem === 'tests' && <Tests subjects={subjects} /> }
+          { activeItem === 'subjects' && <Subjects subjects={subjects} tests={tests}/> }
+          { activeItem === 'tests' && <Tests subjects={subjects} tests={tests}/> }
         </Grid.Column>
       </Grid>
     );

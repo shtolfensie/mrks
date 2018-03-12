@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { List, } from 'semantic-ui-react'
 
 import { db } from './firebase'
 
@@ -10,50 +11,22 @@ class Tests extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      tests: [],
-    }
-  }
-
-  componentWillMount() {
-    this.getAllTests();
-  }
-
-
-  getAllTests = () => {
-    let testsArr = [];
-    db.ref('/marks-app/tests').orderByKey().on('value', snapshot => {
-      snapshot.forEach(test => {
-        testsArr.push({
-          name: test.val().name,
-          dueDate: test.val().dueDate,
-          subjectId: test.val().subjectId,
-          subjectInitials: test.val().subjectInitials,
-          timestamp: test.val().timestamp,
-          key: test.key,
-        }); 
-      });
-      this.setState({ tests: testsArr });
-      console.log(this.state.tests);
-      
-      testsArr = [];
-    });
+    this.state = {}
   }
 
   render() {
 
     const {
-      tests,
-    } = this.state;
-
-    const {
       subjects,
+      tests,
     } = this.props;
 
     return (
       <div>
         <TestAddForm subjects={subjects} />
-        { tests.length !== 0 && tests.map((test, i) => <div key={i} >{test.name}</div>) }
+        <List divided size='large' relaxed='very'>
+          { tests.length !== 0 && tests.map((test, i) => <List.Item key={i} ><List.Content><List.Header content={test.name}/><List.Description content={test.subjectInitials}/>{test.dueDate}</List.Content></List.Item>) }
+        </List>
       </div>
     )
   }

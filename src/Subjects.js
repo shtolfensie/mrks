@@ -7,6 +7,7 @@ import { db } from './firebase'
 
 import SubjectAddForm from './SubjectAddForm'
 import MarkAddForm from './MarkAddForm'
+import TestAddForm from './TestAddForm'
 import DeleteButton from './DeleteButton'
 
 function round(value, decimals) {
@@ -47,13 +48,14 @@ class Subjects extends Component {
 
     const {
       subjects,
+      tests,
     } = this.props;
 
     return (
       <div>
         <SubjectAddForm />
         <Grid doubling padded columns={3}>
-          {subjects.length !== 0 && subjects.map((subject, i) => <Grid.Column style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center'}} key={i}><SubjectCard handleDelete={this.deleteSubject} id={subject.key} name={subject.name} initials={subject.initials} teacher={subject.teacher}/></Grid.Column>)}
+          {subjects.length !== 0 && subjects.map((subject, i) => <Grid.Column style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center'}} key={i}><SubjectCard handleDelete={this.deleteSubject} tests={tests} subject={subject}/></Grid.Column>)}
         </Grid>
       </div>
     )
@@ -69,20 +71,27 @@ class SubjectCard extends Component {
       subjectAverage: 0,
       subjectDisplayAverage: 0,
       isProgressError: false,
+      subjectTests: [],
     }
   }
 
   componentDidMount() {
     this.getAllSubjectMarks();
+    this.getAllSubjectTests();
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log('oh hi mark');
-    console.log(this.state.subjectMarks);
-    console.log(prevState.subjectMarks);
+    // console.log('oh hi mark');
+    // console.log(this.state.subjectMarks);
+    // console.log(prevState.subjectMarks);
     if (this.state.subjectMarks !== prevState.subjectMarks) {
-      console.log(this.state.subjectMarks);
+      // console.log(this.state.subjectMarks);
       this.getSubjectAverage();
+    }
+    if (this.props.tests !== prevProps.tests) {
+      this.getAllSubjectTests();
+      console.log('props');
+      
     }
   }
 
@@ -91,9 +100,9 @@ class SubjectCard extends Component {
   }
 
   getAllSubjectMarks = () => {
-    const { id } = this.props;
+    const { subject } = this.props;
     let subjectMarksArr = [];
-    db.ref('marks-app/marks').orderByChild('subjectId').equalTo(id).on('value', snapshot => {
+    db.ref('marks-app/marks').orderByChild('subjectId').equalTo(subject.key).on('value', snapshot => {
       // console.log(snapshot.val().subjectInitials);
       console.log('getAllSubjectMarks');
       snapshot.forEach(mark => {
@@ -104,10 +113,9 @@ class SubjectCard extends Component {
           subjectInitials: mark.val().subjectInitials,
         });
       });
-      this.setState({ subjectMarks: subjectMarksArr.slice() });
+      this.setState({ subjectMarks: subjectMarksArr });
       subjectMarksArr = [];
-      // this.setState({ subjectMarks: [...this.state.subjectMarks, subjectMarks] });
-    });
+    }); 
   }
 
   getSubjectAverage = () => {
@@ -137,6 +145,18 @@ class SubjectCard extends Component {
     this.setState({ subjectAverage, subjectDisplayAverage, isProgressError });
   }
 
+  getAllSubjectTests = () => {
+    const { tests, subject } = this.props;
+    const subjectTests = [];
+
+    for (var i = 0; i < tests.length; i++) {
+      if (tests[i].subjectId === subject.key) {
+        subjectTests.push(tests[i]); 
+      } 
+    }
+    this.setState({ subjectTests });
+  }
+
 
   render() {
 
@@ -144,16 +164,21 @@ class SubjectCard extends Component {
       subjectMarks,
       subjectAverage,
       subjectDisplayAverage,
-      isProgressError
+      isProgressError,
+      subjectTests,
     } = this.state;
 
     const {
-      name,
-      initials,
-      teacher,
-      id,
+      subject,
       handleDelete,
     } = this.props;
+
+    const {
+      initials,
+      name,
+      teacher,
+      key,
+    } = subject;
 
     return(
       <Card fluid>
@@ -170,10 +195,14 @@ class SubjectCard extends Component {
           <Card.Content>
             <Progress error={isProgressError} label='You fucking suck.' progress content={subjectDisplayAverage} className='indicating' value={subjectAverage} total={5} size='small' />
           </Card.Content>
+          <Card.Content>
+            {subjectTests.length}
+          </Card.Content>
           <Card.Content extra>
-          <Button.Group fluid widths='2' >
-            <MarkAddForm fromSubjectCard subjects={[{ name, key: id, initials, teacher }]}/>
-            <DeleteButton onClick={() => handleDelete(id)} />
+          <Button.Group fluid widths='1' >
+            <MarkAddForm fromSubjectCard subjects={ [{ name, key, initials, teacher }] }/>
+            <TestAddForm fromSubjectCard subjects={ [{ name, key, initials, teacher }] }/>
+            <DeleteButton onClick={() => handleDelete(key)} />
           </Button.Group>
           </Card.Content>
         </Card>
