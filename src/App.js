@@ -16,7 +16,7 @@ class App extends Component {
     super(props);
 
     this.state = {
-      activeItem: 'subjects',
+      activeItem: 'agenda',
       subjects: [],
       tests: [],
     }
@@ -104,7 +104,7 @@ class App extends Component {
           { activeItem === 'marks' && <Marks subjects={subjects} /> }
           { activeItem === 'subjects' && <Subjects subjects={subjects} tests={tests}/> }
           { activeItem === 'tests' && <Tests subjects={subjects} tests={tests}/> }
-          { activeItem === 'agenda' && <Agenda /> }
+          { activeItem === 'agenda' && <Agenda subjects={subjects} tests={tests}/> }
         </Grid.Column>
       </Grid>
     );
