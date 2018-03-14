@@ -11,8 +11,10 @@ class MarkAddForm extends Component {
       open: false,
       value: '',
       subjectId: null,
+      testId: '', 
       isError: false,
       subjectOptions: [],
+      testOptions: [],
     }
   }
   
@@ -25,8 +27,10 @@ class MarkAddForm extends Component {
       this.handleClose();
     }
     else {
-      this.constructDropDownOptionsArray();
+      this.constructSubjectsDropDownOptionsArray();
     }
+    this.constructTestsDropDownOptionsArray();
+
   }
 
   handleClose = () => {
@@ -66,11 +70,17 @@ class MarkAddForm extends Component {
     }
   }
 
-  handleDropdown = (e, { value }) => {
+  handleSubjectDropdown = (e, { value }) => {
     this.setState({
       subjectId: value,
     });
 
+  }
+
+  handleTestDropdown = (e, { value }) => {
+    this.setState({
+      testId: value,
+    });
   }
 
   getSubjectInitials = (id) => {
@@ -88,7 +98,7 @@ class MarkAddForm extends Component {
     }
   }
 
-  constructDropDownOptionsArray = () => {
+  constructSubjectsDropDownOptionsArray = () => {
     const {
       subjects,
       fromSubjectCard,
@@ -96,38 +106,39 @@ class MarkAddForm extends Component {
 
     let subjectOptions = [];
 
-    // if (fromSubjectCard) {
-    //   subjectOptions[0] = {
-    //     key: 1,
-    //     text: subjectName,
-    //     value: subjectId
-    //   }
-    // }
-    // else {
-      for (var i = 0; i < subjects.length; i++) {
-        let subject = {
-          key: i,
-          text: subjects[i].name,
-          value: subjects[i].key,
-        };
-  
-        // console.log(subject);
-        
-  
-        subjectOptions.push(subject);
-      }
-    // }
+    for (var i = 0; i < subjects.length; i++) {
+      let subject = {
+        key: i,
+        text: subjects[i].name,
+        value: subjects[i].key,
+      };
+      // console.log(subject);
+      subjectOptions.push(subject);
+    }
 
     fromSubjectCard && this.setState({ subjectId: subjectOptions[0].value });
     this.setState({ subjectOptions });
+  }
 
-    // if (fromSubjectCard) {
-      // this.setState({ subjectId: this.state.subjectOptions[0].value});
-    // }
+  constructTestsDropDownOptionsArray = () => {
+    const {
+      tests,
+    } = this.props;
 
-    // console.log(subjectOptions);
-    
+    let testOptions = [{ key: 0, text: 'No test', value: 'notest', }];
 
+    if (tests !== undefined) {
+      for (var i = 0; i < tests.length; i++) {
+        let test = {
+          key: i + 1,
+          text: tests[i].name,
+          value: tests[i].key,
+        };
+        testOptions.push(test);
+      }
+    }
+
+    this.setState({ testOptions });
   }
 
 
@@ -136,8 +147,10 @@ class MarkAddForm extends Component {
       open,
       value,
       subjectId,
+      testId,
       isError,
       subjectOptions,
+      testOptions,
     } = this.state;
 
     const {
@@ -178,12 +191,13 @@ class MarkAddForm extends Component {
         <Modal.Header>Add Mark</Modal.Header>
         <Modal.Content>
           <p>Hello! Do you want to add some maks? Yeah. Me neither. But...</p>
-          <Form error={isError}>
+          <Form error={isError} onSubmit={(e) => this.handleAdd(e)} >
             <Form.Group>
               <Form.Input value={value} onChange={(e) => this.setState({ value: e.target.value })} label='Add a Grade' placeholder='1-5' width={3}/>
-              <Form.Dropdown disabled={fromSubjectCard && true} label='Choose a Subject' onChange={this.handleDropdown} value={subjectId} placeholder='Choose a Subject' search selection options={subjectOptions}/>
+              <Form.Dropdown label='Choose a Test' onChange={this.handleTestDropdown} value={testId} placeholder='Choose a Test' search selection options={testOptions}/>              
+              <Form.Dropdown disabled={fromSubjectCard && true} label='Choose a Subject' onChange={this.handleSubjectDropdown} value={subjectId} placeholder='Choose a Subject' search selection options={subjectOptions}/>
             </Form.Group>
-            <Form.Button onClick={this.handleAdd} positive>Add</Form.Button>
+            {/* <Form.Button onClick={this.handleAdd} positive>Add</Form.Button> */}
             <Message 
               error
               header='All fields are required'
@@ -191,6 +205,10 @@ class MarkAddForm extends Component {
             />
           </Form>
         </Modal.Content>
+        <Modal.Actions>
+          <Button basic onClick={this.handleClose}>Cancel</Button>
+          <Button positive onClick={this.handleAdd}>Add</Button>
+        </Modal.Actions>
       </Modal>
     );
   }

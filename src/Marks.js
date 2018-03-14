@@ -4,7 +4,7 @@ import { List, Grid, Segment, Header, Button, Confirm, } from 'semantic-ui-react
 import { db } from './firebase'
 
 import MarkAddForm from './MarkAddForm'
-import DeleteButton from './DeleteButton'
+import DeleteConfirmModal from './DeleteConfirmModal'
 
 class Marks extends Component {
   constructor(props) {
@@ -82,39 +82,11 @@ const MarkItem = (props) =>
         </Grid.Column>   
         <Grid.Column computer={2} tablet={3} floated='right' verticalAlign='middle'>
           {/* <Button floated='right' onClick={() => props.handleDelete(props.markId)} content='Delete' negative/> */}
-          <ConfirmDeleteModal handleConfirm={() => props.handleDelete(props.markId)} buttonContent='Delete' />
+          <DeleteConfirmModal handleConfirm={() => props.handleDelete(props.markId)} />
         </Grid.Column>             
       </Grid.Row>              
     </Grid>
   </List.Item>
-
-
-class ConfirmDeleteModal extends Component {
-  state = { open: false }
-
-  show = () => this.setState({ open: true })
-  handleConfirm = () => {
-    this.props.handleConfirm();
-    this.handleClose();
-  }
-  handleClose = () => this.setState({ open: false })
-
-  render() {
-    return (
-      <div>
-        {/* <Button negative onClick={this.show}>{this.props.buttonContent}</Button> */}
-        <DeleteButton onClick={this.show} />
-        <Confirm
-          open={this.state.open}
-          cancelButton='Never mind'
-          confirmButton="Yes"
-          onCancel={this.handleClose}
-          onConfirm={this.handleConfirm}
-        />
-      </div>
-    )
-  }
-}
 
 
 export default Marks;

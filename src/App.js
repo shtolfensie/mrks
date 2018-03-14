@@ -8,6 +8,7 @@ import Subjects from './Subjects.js'
 import Marks from './Marks'
 import HomePage from './Home'
 import Tests from './Tests'
+import Agenda from './Agenda'
 
 class App extends Component {
 
@@ -94,15 +95,16 @@ class App extends Component {
       //   </div>
       // </div>
 
-      <Grid columns={2}>
+      <Grid columns={2} padded>
         <Grid.Column width={3}>
           <MainMenu activeItem={activeItem} handleItemClick={this.handleMenuItemClick}/>
         </Grid.Column>
-        <Grid.Column width={13}>
+        <Grid.Column width={13} style={{ padding: '0'}}>
           { activeItem === 'home' && <HomePage /> }
           { activeItem === 'marks' && <Marks subjects={subjects} /> }
           { activeItem === 'subjects' && <Subjects subjects={subjects} tests={tests}/> }
           { activeItem === 'tests' && <Tests subjects={subjects} tests={tests}/> }
+          { activeItem === 'agenda' && <Agenda /> }
         </Grid.Column>
       </Grid>
     );

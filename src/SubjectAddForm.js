@@ -81,13 +81,13 @@ class SubjectAddForm extends Component {
         <Modal.Header>Add Subject</Modal.Header>
         <Modal.Content>
           <p>Hi there! Let's add some subjects, shall we?</p>
-          <Form error={isError}>
+          <Form error={isError} onSubmit={this.handleAdd}>
             <Form.Group widths='equal'>
               <Form.Input value={name} onChange={(e) => this.setState({ name: e.target.value })} fluid label='Subject Name' placeholder='eg. Maths, Biology, ...'/>
               <Form.Input value={initials} onChange={(e) => this.setState({ initials: e.target.value })} fluid label='Subject Initials' placeholder='eg. M, Ma, Bi, Fy, ...'/>
             </Form.Group>
             <Form.Group widths='equal'>
-              <Form.Input value={teacher} onChange={(e) => this.setState({ teacher: e.target.value })} fluid label='Teacher' placeholder='eg. Smith, Brown, ...'/>
+              <Form.Input value={teacher} onChange={(e) => this.setState({ teacher: e.target.value })} fluid label='Teacher' placeholder='eg. Smith, Doe, ...'/>
             </Form.Group>
             <Message 
               error

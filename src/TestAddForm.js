@@ -171,7 +171,7 @@ class TestAddForm extends Component {
               <Form.Input value={dueDate} onChange={(e) => this.setState({ dueDate: e.target.value })} label='Add a Due Date' />
               <Form.Dropdown disabled={fromSubjectCard && true} label='Choose a Subject' onChange={this.handleDropdown} value={subjectId} placeholder='Choose a Subject' search selection options={subjectOptions}/>
             </Form.Group>
-            <Form.Button onClick={this.handleAdd} positive>Add</Form.Button>
+            {/* <Form.Button onClick={this.handleAdd} positive>Add</Form.Button> */}
             <Message 
               error
               header='All fields are required'
@@ -179,6 +179,10 @@ class TestAddForm extends Component {
             />
           </Form>
         </Modal.Content>
+        <Modal.Actions>
+          <Button basic onClick={this.handleClose}>Cancel</Button>
+          <Button positive onClick={this.handleAdd}>Add</Button>
+        </Modal.Actions>
       </Modal>
     );
   }

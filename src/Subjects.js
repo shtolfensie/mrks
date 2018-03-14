@@ -9,6 +9,7 @@ import SubjectAddForm from './SubjectAddForm'
 import MarkAddForm from './MarkAddForm'
 import TestAddForm from './TestAddForm'
 import DeleteButton from './DeleteButton'
+import DeleteConfirmModal from './DeleteConfirmModal'
 
 function round(value, decimals) {
   return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
@@ -200,9 +201,10 @@ class SubjectCard extends Component {
           </Card.Content>
           <Card.Content extra>
           <Button.Group fluid widths='1' >
-            <MarkAddForm fromSubjectCard subjects={ [{ name, key, initials, teacher }] }/>
+            <MarkAddForm fromSubjectCard subjects={ [{ name, key, initials, teacher }] } tests={subjectTests} />
             <TestAddForm fromSubjectCard subjects={ [{ name, key, initials, teacher }] }/>
-            <DeleteButton onClick={() => handleDelete(key)} />
+            {/* <DeleteButton onClick={() => handleDelete(key)} /> */}
+            <DeleteConfirmModal handleConfirm={() => handleDelete(key)} />
           </Button.Group>
           </Card.Content>
         </Card>
