@@ -51,12 +51,13 @@ class Marks extends Component {
     } = this.state;
 
     const {
-      subjects
+      subjects,
+      tests,
     } = this.props;
 
     return(
       <div>
-        <MarkAddForm subjects={subjects} />
+        <MarkAddForm subjects={subjects} tests={tests}/>
         <List divided>
           {marks.length !== 0 && marks.map((mark, i) => <MarkItem key={i} handleDelete={this.handleDelete} markId={mark.key} subjectId={mark.subjectId} value={mark.value} subjectInitials={mark.subjectInitials} timestamp={mark.timestamp} />)}
         </List>

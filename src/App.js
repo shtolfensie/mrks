@@ -101,7 +101,7 @@ class App extends Component {
         </Grid.Column>
         <Grid.Column width={14} style={{ padding: '0'}}>
           { activeItem === 'home' && <HomePage /> }
-          { activeItem === 'marks' && <Marks subjects={subjects} /> }
+          { activeItem === 'marks' && <Marks subjects={subjects} tests={tests}/> }
           { activeItem === 'subjects' && <Subjects subjects={subjects} tests={tests}/> }
           { activeItem === 'tests' && <Tests subjects={subjects} tests={tests}/> }
           { activeItem === 'agenda' && <Agenda subjects={subjects} tests={tests}/> }

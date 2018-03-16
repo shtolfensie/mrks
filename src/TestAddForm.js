@@ -3,6 +3,8 @@ import { db } from './firebase'
 
 import { Modal, Button, Icon, Form, Dropdown, Message, } from 'semantic-ui-react'
 
+import DuedatePicker from './DuedatePicker'
+
 const INITIAL_STATE = {
   open: false,
   name: '',
@@ -161,6 +163,7 @@ class TestAddForm extends Component {
         onClose={this.handleClose}
         dimmer={false}
         closeOnDocumentClick
+        style={{ zIndex: '999' }}
       >
         <Modal.Header>Add Test</Modal.Header>
         <Modal.Content>
@@ -168,7 +171,8 @@ class TestAddForm extends Component {
           <Form error={isError}>
             <Form.Group>
               <Form.Input value={name} onChange={(e) => this.setState({ name: e.target.value })} label='Add a Name' placeholder='' />
-              <Form.Input value={dueDate} onChange={(e) => this.setState({ dueDate: e.target.value })} label='Add a Due Date' />
+              {/* <Form.Input value={dueDate} onChange={(e) => this.setState({ dueDate: e.target.value })} label='Add a Due Date' /> */}
+              <DuedatePicker value={dueDate} onChange={(e, { value }) => this.setState({ dueDate: value })} label='Add a Due Date' placeholder='Add a Due Date'/>
               <Form.Dropdown disabled={fromSubjectCard && true} label='Choose a Subject' onChange={this.handleDropdown} value={subjectId} placeholder='Choose a Subject' search selection options={subjectOptions}/>
             </Form.Group>
             {/* <Form.Button onClick={this.handleAdd} positive>Add</Form.Button> */}

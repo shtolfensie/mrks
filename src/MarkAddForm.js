@@ -127,6 +127,8 @@ class MarkAddForm extends Component {
 
     let testOptions = [{ key: 0, text: 'No test', value: 'notest', }];
 
+    console.log(tests);
+    
     if (tests !== undefined) {
       for (var i = 0; i < tests.length; i++) {
         let test = {
@@ -135,6 +137,7 @@ class MarkAddForm extends Component {
           value: tests[i].key,
         };
         testOptions.push(test);
+        
       }
     }
 
