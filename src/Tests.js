@@ -30,7 +30,7 @@ class Tests extends Component {
       <div>
         <TestAddForm subjects={subjects} />
         <List divided size='large' relaxed='very'>
-          { tests.length !== 0 && tests.map((test, i) => <List.Item key={i} ><List.Content><List.Header content={test.name}/><List.Description content={test.subjectInitials}/>{test.dueDate}<DeleteConfirmModal handleConfirm={() => this.handleDelete(test.key)} /> </List.Content></List.Item>) }
+          { tests.length !== 0 && tests.map((test, i) => <List.Item key={i} ><List.Content floated='left'><List.Header content={test.name}/><List.Description content={test.subjectInitials}/>{test.dueDate}</List.Content><List.Content floated='right'><DeleteConfirmModal handleConfirm={() => this.handleDelete(test.key)} /></List.Content> </List.Item>) }
         </List>
       </div>
     )

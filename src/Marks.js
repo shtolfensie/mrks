@@ -71,7 +71,7 @@ const MarkItem = (props) =>
   <List.Item>
     <Grid padded celled='internally' columns='equal' >
       <Grid.Row stretched columns={3}>
-        <Grid.Column textAlign='center' verticalAlign='middle' computer={1} tablet={2}>
+        <Grid.Column textAlign='center' verticalAlign='middle' computer={3} tablet={2}>
           <Segment textAlign='center' color='purple'>
             <Header content={props.value} size='medium' />
           </Segment>

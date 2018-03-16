@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import { Segment, Grid, Header, Menu} from 'semantic-ui-react'
 
 import Tests from './Tests'
+import Marks from './Marks'
 
 class Agenda extends Component {
   constructor(props) {
@@ -49,51 +50,80 @@ class Agenda extends Component {
       //     <Segment attached />
       //   </Grid.Column>
       // </Grid>
-      <Grid columns={1} padded>
-        <Grid.Column>
-          <Segment style={this.styles.noPaddingSegment} >
-            <Grid columns='equal' padded celled='internally' >
-              <Grid.Row>
-                <Grid.Column>
-                  <Header color='red' content='TESTS' size='large' textAlign='center' />
-                </Grid.Column>
-                <Grid.Column>
-                  <Header color='red' content='HOMEWORK' size='large' textAlign='center' />
-                </Grid.Column>
-                <Grid.Column>
-                  <Header color='red'  content='REMINDERS' size='large' textAlign='center' />
-                </Grid.Column>
-              </Grid.Row>
-              <Grid.Row>
-                <Grid.Column >
-                  <Menu color='red' pointing secondary>
-                    <Menu.Item
-                      name='section1'
-                      active={true}
-                    >
-                      Section 1
-                    </Menu.Item>
 
-                    <Menu.Item
-                      name='section2'
-                      active={false}
-                    >
-                      Section 2
-                    </Menu.Item>
-                  </Menu>
-                  <Tests subjects={subjects} tests={tests}/>
-                </Grid.Column>
-                <Grid.Column>
-                  <Header content='Homework' size='large' textAlign='center' />
-                </Grid.Column>
-                <Grid.Column>
-                  <Header content='Reminders' size='large' textAlign='center' />
-                </Grid.Column>
-              </Grid.Row>
-            </Grid>
-          </Segment>
-        </Grid.Column>
+      // <Grid columns={1} padded>
+      //   <Grid.Column>
+      //     <Segment style={this.styles.noPaddingSegment} >
+      //       <Grid columns='equal' padded celled='internally' >
+      //         <Grid.Row>
+      //           <Grid.Column>
+      //             <Header color='red' content='TESTS' size='large' textAlign='center' />
+      //           </Grid.Column>
+      //           <Grid.Column>
+      //             <Header color='red' content='HOMEWORK' size='large' textAlign='center' />
+      //           </Grid.Column>
+      //           <Grid.Column>
+      //             <Header color='red'  content='REMINDERS' size='large' textAlign='center' />
+      //           </Grid.Column>
+      //         </Grid.Row>
+      //         <Grid.Row>
+      //           <Grid.Column >
+      //             <Menu color='red' pointing secondary>
+      //               <Menu.Item name='upcomingTests' active={true} >
+      //                 Upcoming Tests
+      //               </Menu.Item>
+      //               <Menu.Item name='allTests' active={false} >
+      //                 All Tests
+      //               </Menu.Item>
+      //             </Menu>
+      //             <Tests subjects={subjects} tests={tests}/>
+      //           </Grid.Column>
+      //           <Grid.Column>
+      //             <Header content='Homework' size='large' textAlign='center' />
+      //           </Grid.Column>
+      //           <Grid.Column>
+      //             <Header content='Reminders' size='large' textAlign='center' />
+      //           </Grid.Column>
+      //         </Grid.Row>
+      //       </Grid>
+      //     </Segment>
+      //   </Grid.Column>
+      // </Grid>
+    <div>
+      <Segment style={{ padding: '1rem'}}>
+      <Grid columns={3} padded>
+        <Grid.Row>
+          <Grid.Column style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+            <Header textAlign='center' size='large' content='Tests' />
+            <div style={{ borderBottom: '2px solid red', width: '75%'}}></div>
+          </Grid.Column>
+          <Grid.Column style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+            <Header textAlign='center' size='large' content='Homework' />
+            <div style={{ borderBottom: '2px solid red', width: '75%'}}></div>            
+          </Grid.Column>
+          <Grid.Column style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+            <Header textAlign='center' size='large' content='Reminders' />
+            <div style={{ borderBottom: '2px solid red', width: '75%'}}></div>            
+          </Grid.Column>
+        </Grid.Row>
       </Grid>
+      </Segment>
+      <Grid columns={3} padded>
+        <Grid.Row>
+          <Grid.Column>
+            <Segment>
+              <Tests subjects={subjects} tests={tests}/>
+            </Segment>
+          </Grid.Column>
+          <Grid.Column>
+            <Segment>
+              <Marks subjects={subjects} />
+            </Segment>
+          </Grid.Column>
+          <Grid.Column></Grid.Column>
+        </Grid.Row>
+      </Grid>
+      </div>
     )
   }
 }
