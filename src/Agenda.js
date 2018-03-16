@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { Segment, Grid, Header, Menu} from 'semantic-ui-react'
+import { Segment, Grid, Header, Menu, Dropdown, Icon} from 'semantic-ui-react'
 
 import Tests from './Tests'
 import Marks from './Marks'
@@ -90,7 +90,7 @@ class Agenda extends Component {
       //   </Grid.Column>
       // </Grid>
     <div>
-      <Segment style={{ padding: '1rem'}}>
+      <Segment style={{ margin: '1rem 1rem 0 1rem'}}>
       <Grid columns={3} padded>
         <Grid.Row>
           <Grid.Column style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
@@ -111,7 +111,38 @@ class Agenda extends Component {
       <Grid columns={3} padded>
         <Grid.Row>
           <Grid.Column>
-            <Segment>
+            <Menu attached='top'>
+              <Dropdown item icon='bars' simple>
+                <Dropdown.Menu>
+                  <Dropdown.Item>
+                    <Icon name='dropdown' />
+                    <span className='text'>New</span>
+
+                    <Dropdown.Menu>
+                      <Dropdown.Item>Document</Dropdown.Item>
+                      <Dropdown.Item>Image</Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown.Item>
+                  <Dropdown.Item>Open</Dropdown.Item>
+                  <Dropdown.Item>Save...</Dropdown.Item>
+                  <Dropdown.Item>Edit Permissions</Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Header>Export</Dropdown.Header>
+                  <Dropdown.Item>Share</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+
+              <Menu.Menu position='right'>
+                <div className='ui right aligned category search item'>
+                  <div className='ui transparent icon input'>
+                    <input className='prompt' type='text' placeholder='Search tests...' />
+                    <i className='search link icon' />
+                  </div>
+                  <div className='results' />
+                </div>
+              </Menu.Menu>
+            </Menu>
+            <Segment attached='bottom'>
               <Tests subjects={subjects} tests={tests}/>
             </Segment>
           </Grid.Column>

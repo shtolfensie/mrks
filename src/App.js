@@ -96,10 +96,10 @@ class App extends Component {
       // </div>
 
       <Grid columns={2} padded>
-        <Grid.Column width={3}>
+        <Grid.Column width={2}>
           <MainMenu activeItem={activeItem} handleItemClick={this.handleMenuItemClick}/>
         </Grid.Column>
-        <Grid.Column width={13} style={{ padding: '0'}}>
+        <Grid.Column width={14} style={{ padding: '0'}}>
           { activeItem === 'home' && <HomePage /> }
           { activeItem === 'marks' && <Marks subjects={subjects} /> }
           { activeItem === 'subjects' && <Subjects subjects={subjects} tests={tests}/> }
