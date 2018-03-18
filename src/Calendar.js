@@ -17,6 +17,7 @@ class Calendar extends Component {
         value={this.state.date}
         // tileContent={({ date, view }) => view === 'month' && date.getDay() === 0 ? <p>It's Sunday!</p> : null}
         tileClassName={({ date, view }) => view === 'month' && date.valueOf() === new Date().setHours(0,0,0,0) ? 'currentDay' : null}
+        onClickDay={this.props.handleClickDay}
       />
     );
   }

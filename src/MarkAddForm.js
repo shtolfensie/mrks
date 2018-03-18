@@ -3,19 +3,23 @@ import { db } from './firebase'
 
 import { Modal, Button, Icon, Form, Dropdown, Message, } from 'semantic-ui-react'
 
+
+const INITIAL_STATE = {
+  open: false,
+  value: '',
+  subjectId: null,
+  testId: '', 
+  testName: '',
+  isError: false,
+  subjectOptions: [],
+  testOptions: [],
+}
+
 class MarkAddForm extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      open: false,
-      value: '',
-      subjectId: null,
-      testId: '', 
-      isError: false,
-      subjectOptions: [],
-      testOptions: [],
-    }
+    this.state = INITIAL_STATE;
   }
   
   handleOpen = ()  => {
@@ -34,13 +38,7 @@ class MarkAddForm extends Component {
   }
 
   handleClose = () => {
-    this.setState({
-      open: false,
-      value: '',
-      subjectInitials: '',
-      subjectId: null,
-      isError: false,
-    });
+    this.setState(INITIAL_STATE);
   }
 
   handleAdd = (e) => {
@@ -51,6 +49,8 @@ class MarkAddForm extends Component {
       timestamp,
       subjectInitials,
       subjectId,
+      testId,
+      testName,
     } = this.state;
 
     if (value === '' || subjectId === '') {
@@ -62,6 +62,8 @@ class MarkAddForm extends Component {
         timestamp: new Date().valueOf(),
         subjectInitials: this.getSubjectInitials(subjectId),
         subjectId,
+        testId,
+        testName: this.getTestName(testId),
       }
   
       db.ref('marks-app/marks').push(mark);
@@ -94,6 +96,18 @@ class MarkAddForm extends Component {
       if (subjects[i].key === id){
         // console.log('hey');
         return subjects[i].initials;
+      }
+    }
+  }
+
+  getTestName = (id) => {
+    const {
+      tests,
+    } = this.props;
+
+    for (var i = 0; i < tests.length; i++) {
+      if (tests[i].key === id) {
+        return tests[i].name;
       }
     }
   }

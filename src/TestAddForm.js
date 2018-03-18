@@ -3,6 +3,8 @@ import { db } from './firebase'
 
 import { Modal, Button, Icon, Form, Dropdown, Message, } from 'semantic-ui-react'
 
+import * as DateUtils from './utils/DateUtils'
+
 import DuedatePicker from './DuedatePicker'
 
 const INITIAL_STATE = {
@@ -12,6 +14,7 @@ const INITIAL_STATE = {
   subjectId: null,
   isError: false,
   subjectOptions: [],
+  onDocClick: true,
 }
 
 class TestAddForm extends Component {
@@ -129,6 +132,16 @@ class TestAddForm extends Component {
 
   }
 
+  handleOpenChage = (open) => {
+    if (open) this.setState({ onDocClick: false });
+    else {
+      setTimeout(() => {
+        this.setState({ onDocClick: true });
+      }, 150)
+    }
+      
+  }
+
 
   render() {
     const {
@@ -138,6 +151,7 @@ class TestAddForm extends Component {
       subjectId,
       isError,
       subjectOptions,
+      onDocClick,
     } = this.state;
 
     const {
@@ -162,7 +176,7 @@ class TestAddForm extends Component {
         open={open}
         onClose={this.handleClose}
         dimmer={false}
-        closeOnDocumentClick
+        closeOnDocumentClick={onDocClick}
         style={{ zIndex: '999' }}
       >
         <Modal.Header>Add Test</Modal.Header>
@@ -172,7 +186,7 @@ class TestAddForm extends Component {
             <Form.Group>
               <Form.Input value={name} onChange={(e) => this.setState({ name: e.target.value })} label='Add a Name' placeholder='' />
               {/* <Form.Input value={dueDate} onChange={(e) => this.setState({ dueDate: e.target.value })} label='Add a Due Date' /> */}
-              <DuedatePicker value={dueDate} onChange={(e, { value }) => this.setState({ dueDate: value })} label='Add a Due Date' placeholder='Add a Due Date'/>
+              <DuedatePicker onOpenChange={this.handleOpenChage} value={dueDate} onChange={(e, { value }) => this.setState({ dueDate: value })} label='Add a Due Date' placeholder='Add a Due Date'/>
               <Form.Dropdown disabled={fromSubjectCard && true} label='Choose a Subject' onChange={this.handleDropdown} value={subjectId} placeholder='Choose a Subject' search selection options={subjectOptions}/>
             </Form.Group>
             {/* <Form.Button onClick={this.handleAdd} positive>Add</Form.Button> */}

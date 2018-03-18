@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 
-import { Dropdown, Form, Modal, } from 'semantic-ui-react'
+import { Dropdown, Form, Modal, Button, } from 'semantic-ui-react'
+
+import * as DateUtils from './utils/DateUtils'
 
 import Calendar from './Calendar'
 
@@ -11,6 +13,7 @@ class DuedatePicker extends Component {
     this.state = {
       open: false,
       onDocClick: false,
+      pickedDate: null,
     }
   }
 
@@ -18,17 +21,17 @@ class DuedatePicker extends Component {
     {
       key: 1,
       text: 'Today',
-      value: new Date().valueOf(),
+      value: DateUtils.getDuedate('today'),
     },
     {
       key: 2,
       text: 'Tomorrow',
-      value: new Date('2018').valueOf(),
+      value: DateUtils.getDuedate('tomorrow'),
     },
     {
       key: 3,
       text: 'Next Week',
-      value: new Date('2019').valueOf(),
+      value: DateUtils.getDuedate('nextWeek'),
     },
     {
       key: 4,
@@ -44,6 +47,7 @@ class DuedatePicker extends Component {
   }
 
   handleOpen = () => {
+    this.props.onOpenChange(true);
     this.setState({ open: true, });
 
     setTimeout(() => {
@@ -52,6 +56,7 @@ class DuedatePicker extends Component {
   }
 
   handleClose = () => {
+    this.props.onOpenChange(false);
     this.setState({ open: false, onDocClick: false });
   }
 
@@ -59,6 +64,28 @@ class DuedatePicker extends Component {
     if (this.props.value === 'other') this.handleOpen();
     console.log('check if open');
     
+  }
+
+  handleClickDay = (date) => {
+    // alert(date.valueOf());
+    this.setState({ pickedDate: date });    
+    
+  }
+
+  handleCalendarPick = () => {
+    this.options.push({
+      key: this.options.length + 1,
+      text: this.state.pickedDate.toDateString(),
+      value: this.state.pickedDate.valueOf(),
+    });
+
+    console.log(this.options)
+
+    // this.setState({ value: this.state.pickedDate.valueOf() });
+    this.props.onChange(1, { value: this.state.pickedDate.valueOf() });
+
+    this.handleClose();
+
   }
 
   render() {
@@ -87,8 +114,12 @@ class DuedatePicker extends Component {
           closeOnDocumentClick={onDocClick}
         >
           <Modal.Content style={{ display: 'flex', justifyContent: 'center' }}>
-            <Calendar />
+            <Calendar handleClickDay={this.handleClickDay}/>
           </Modal.Content>
+          <Modal.Actions>
+            <Button basic content='Cancel' onClick={this.handleClose}/>
+            <Button basic positive content='Ok' onClick={this.handleCalendarPick} />
+          </Modal.Actions>
         </Modal>
       </div>
     )

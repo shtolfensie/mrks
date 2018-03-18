@@ -31,6 +31,8 @@ class Marks extends Component {
           subjectInitials: mark.val().subjectInitials,
           timestamp: mark.val().timestamp,
           key: mark.key,
+          testId: mark.val().testId,
+          testName: mark.val().testName,
         }); 
       });
       this.setState({ marks: marksArr });
@@ -59,7 +61,7 @@ class Marks extends Component {
       <div>
         <MarkAddForm subjects={subjects} tests={tests}/>
         <List divided>
-          {marks.length !== 0 && marks.map((mark, i) => <MarkItem key={i} handleDelete={this.handleDelete} markId={mark.key} subjectId={mark.subjectId} value={mark.value} subjectInitials={mark.subjectInitials} timestamp={mark.timestamp} />)}
+          {marks.length !== 0 && marks.map((mark, i) => <MarkItem key={i} handleDelete={this.handleDelete} mark={mark} markId={mark.key} subjectId={mark.subjectId} value={mark.value} subjectInitials={mark.subjectInitials} timestamp={mark.timestamp} />)}
         </List>
       </div>
     )
@@ -68,22 +70,23 @@ class Marks extends Component {
 }
 
 
-const MarkItem = (props) =>
+const MarkItem = ({ handleDelete, mark }) =>
   <List.Item>
     <Grid padded celled='internally' columns='equal' >
       <Grid.Row stretched columns={3}>
         <Grid.Column textAlign='center' verticalAlign='middle' computer={3} tablet={2}>
           <Segment textAlign='center' color='purple'>
-            <Header content={props.value} size='medium' />
+            <Header content={mark.value} size='medium' />
           </Segment>
         </Grid.Column>
         <Grid.Column>
-          <Header size='medium' content={props.subjectInitials}/>
-          <p>{new Date(props.timestamp).toDateString()}</p>
+          <Header size='medium' content={mark.subjectInitials}/>
+          <p>{new Date(mark.timestamp).toDateString()}</p>
+          <p>{mark.testName}</p>
         </Grid.Column>   
         <Grid.Column computer={2} tablet={3} floated='right' verticalAlign='middle'>
           {/* <Button floated='right' onClick={() => props.handleDelete(props.markId)} content='Delete' negative/> */}
-          <DeleteConfirmModal handleConfirm={() => props.handleDelete(props.markId)} />
+          <DeleteConfirmModal handleConfirm={() => handleDelete(mark.key)} />
         </Grid.Column>             
       </Grid.Row>              
     </Grid>
