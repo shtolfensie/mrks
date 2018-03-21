@@ -112,10 +112,7 @@ class Agenda extends Component {
       <Grid columns={3} padded>
         <Grid.Row>
           <Grid.Column>
-            <AgendaSubMenu subjects={subjects} />
-            <Segment attached='bottom'>
-              <Tests subjects={subjects} tests={tests} fromAgenda={true}/>
-            </Segment>
+            <Tests subjects={subjects} tests={tests} fromAgenda={true}/>
           </Grid.Column>
           <Grid.Column>
           <Menu attached='top'>
