@@ -55,16 +55,18 @@ class Tests extends Component {
         <AgendaSubMenu subjects={subjects} />
         <Segment attached='bottom'>
           {/* { fromAgenda !== true && <AgendaSubMenu subjects={subjects} /> } */}
+          <List divided >
           { Object.keys(groupedTests).map((testGroup, i) => {
             return (
-              <div key={i}>
-                <Header size='medium' color='red' >{ new Date(Number(testGroup)).toDateString()}</Header>
+              <List.Item key={i}>
+                <Header size='small' color='red' >{ new Date(Number(testGroup)).toDateString()}</Header>
                 <List divided size='large' relaxed='very'>
                   { tests.length !== 0 && groupedTests[testGroup].map((test, i) => <TestItem key={i} i={i} test={test} handleDelete={this.handleDelete} />) }
                 </List>
-              </div>
+              </List.Item>
             )
           }) }
+          </List>
         </Segment>
 
       </div>
