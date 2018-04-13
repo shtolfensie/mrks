@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { db } from './firebase'
 
-import { Modal, Button, Icon, Form, Dropdown, Message, } from 'semantic-ui-react'
+import { Modal, Button, Icon, Form, Dropdown, Message, Menu, } from 'semantic-ui-react'
 
 import * as DateUtils from './utils/DateUtils'
 
@@ -11,7 +11,7 @@ const INITIAL_STATE = {
   open: false,
   name: '',
   dueDate: '',
-  subjectId: null,
+  subjectId: '',
   isError: false,
   subjectOptions: [],
   onDocClick: true,
@@ -48,9 +48,10 @@ class TestAddForm extends Component {
       name,
       dueDate,
       subjectId,
+      subjectInitials,
     } = this.state;
 
-    if (name === '' || subjectId === '' || dueDate === '') {
+    if (name === '' || subjectId === '' || dueDate === '' ) {
       this.setState({ isError: true });
     }
     else {
@@ -156,7 +157,7 @@ class TestAddForm extends Component {
 
     const {
       fromSubjectCard,
-      subjects
+      subjects,
     } = this.props;
 
     // const subjectOptions = [
@@ -169,10 +170,7 @@ class TestAddForm extends Component {
 
     return (
       <Modal
-        trigger={<Button basic color='blue' animated='fade' onClick={this.handleOpen}>
-                  <Button.Content visible>Add Test</Button.Content>
-                  <Button.Content hidden><Icon name='plus'/></Button.Content>
-                </Button>}
+        trigger={ <Menu.Item onClick={this.handleOpen}>Add a Test</Menu.Item> }
         open={open}
         onClose={this.handleClose}
         dimmer={false}
@@ -208,3 +206,8 @@ class TestAddForm extends Component {
 
 
 export default TestAddForm;
+
+{/* <Button basic color='blue' animated='fade' onClick={this.handleOpen}>
+                  <Button.Content visible>Add Test</Button.Content>
+                  <Button.Content hidden><Icon name='plus'/></Button.Content>
+                </Button> */}

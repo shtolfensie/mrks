@@ -19,6 +19,13 @@ class App extends Component {
       activeItem: 'agenda',
       subjects: [],
       tests: [],
+      loadingTests: true,
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.tests !== this.state.tests) {
+      this.setState({ loadingTests: false });
     }
   }
 
@@ -46,7 +53,7 @@ class App extends Component {
 
   getAllTests = () => {
     let testsArr = [];
-    db.ref('/marks-app/tests').orderByKey().on('value', snapshot => {
+    db.ref('/marks-app/tests').orderByChild('dueDate').on('value', snapshot => {
       snapshot.forEach(test => {
         testsArr.push({
           name: test.val().name,
@@ -55,9 +62,13 @@ class App extends Component {
           subjectInitials: test.val().subjectInitials,
           timestamp: test.val().timestamp,
           key: test.key,
+          markValue: test.val().markValue ? test.val().markValue : undefined,
+          // markId: test.val().markId ? test.val().markId : undefined,
+          markId: test.val().markId,          
         }); 
       });
       this.setState({ tests: testsArr });
+      // this.setState({ tests: [] });      
       console.log(this.state.tests);
       
       testsArr = [];
@@ -84,6 +95,7 @@ class App extends Component {
       activeItem,
       subjects,
       tests,
+      loadingTests,
     } = this.state;
 
     return (
@@ -103,8 +115,8 @@ class App extends Component {
           { activeItem === 'home' && <HomePage /> }
           { activeItem === 'marks' && <Marks subjects={subjects} tests={tests}/> }
           { activeItem === 'subjects' && <Subjects subjects={subjects} tests={tests}/> }
-          { activeItem === 'tests' && <Tests subjects={subjects} tests={tests}/> }
-          { activeItem === 'agenda' && <Agenda subjects={subjects} tests={tests}/> }
+          { activeItem === 'tests' && <Tests loadingTests={loadingTests} subjects={subjects} tests={tests}/> }
+          { activeItem === 'agenda' && <Agenda loadingTests={loadingTests} subjects={subjects} tests={tests}/> }
         </Grid.Column>
       </Grid>
     );

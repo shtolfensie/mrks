@@ -66,7 +66,8 @@ class MarkAddForm extends Component {
         testName: this.getTestName(testId),
       }
   
-      db.ref('marks-app/marks').push(mark);
+      var markId = db.ref('marks-app/marks').push(mark).key;
+      db.ref(`marks-app/tests/${mark.testId}`).update({ markValue: parseFloat(value), markId });
 
       this.handleClose();
     }

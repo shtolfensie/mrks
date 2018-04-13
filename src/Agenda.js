@@ -28,6 +28,7 @@ class Agenda extends Component {
     const {
       subjects,
       tests,
+      loadingTests,
     } = this.props;
 
     return (
@@ -112,7 +113,7 @@ class Agenda extends Component {
       <Grid columns={3} padded>
         <Grid.Row>
           <Grid.Column>
-            <Tests subjects={subjects} tests={tests} fromAgenda={true}/>
+            <Tests loadingTests={loadingTests} subjects={subjects} tests={tests} fromAgenda={true}/>
           </Grid.Column>
           <Grid.Column>
           <Menu attached='top'>

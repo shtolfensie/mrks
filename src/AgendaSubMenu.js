@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { Menu, Dropdown, Icon, } from 'semantic-ui-react'
+import { Checkbox, Menu, Dropdown, Icon, } from 'semantic-ui-react'
 
 import TestAddForm from './TestAddForm'
 
@@ -9,23 +9,34 @@ class AgendaSubMenu extends Component {
     super(props);
 
     this.state = {
-      activeItem: ''
+      activeItem: '',
+      showGraded: true,
     }
+  }
+
+  componentDidMount() {
+    this.setState({ activeItem: this.props.groupBy })
   }
 
   handleItemClick = (e, { name }) => {
     this.setState({ activeItem: name });
   }
 
+  handleGroupByChange = (groupBy) => {
+    this.setState({ activeItem: groupBy });
+    this.props.handleGroupByChange(groupBy);
+  }
+
 
 
   render() {
     const {
-      activeItem
+      activeItem,
     } = this.state;
 
     const {
       subjects,
+      showGraded,      
     } = this.props;
 
     return (
@@ -34,13 +45,17 @@ class AgendaSubMenu extends Component {
           <Dropdown.Menu>
             <Dropdown.Item>
               <Icon name='dropdown' />
-              <span className='text'>New</span>
+              <span className='text'>Sort by</span>
 
               <Dropdown.Menu>
-                <Dropdown.Item>Document</Dropdown.Item>
-                <Dropdown.Item>Image</Dropdown.Item>
+                <Dropdown.Item active={activeItem === 'dueDate'} onClick={() => this.handleGroupByChange('dueDate')} >Due date</Dropdown.Item>
+                <Dropdown.Item active={activeItem === 'subjectInitials'} onClick={() => this.handleGroupByChange('subjectInitials')}>Subject</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown.Item>
+            <Dropdown.Item>
+              <Checkbox checked={showGraded} onChange={this.props.handleGradedChange} label='Show graded' />
+            </Dropdown.Item>
+            <TestAddForm subjects={subjects} />
             <Dropdown.Item>Open</Dropdown.Item>
             <Dropdown.Item>Save...</Dropdown.Item>
             <Dropdown.Item>Edit Permissions</Dropdown.Item>
@@ -49,10 +64,7 @@ class AgendaSubMenu extends Component {
             <Dropdown.Item>Share</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
-        <Menu.Item>
-          <TestAddForm subjects={subjects} />
-        </Menu.Item>
-
+        <TestAddForm subjects={subjects} />
         <Menu.Menu position='right'>
           <div className='ui right aligned category search item'>
             <div className='ui transparent icon input'>

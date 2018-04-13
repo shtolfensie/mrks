@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { List, Grid, Segment, Header, Button, Confirm, } from 'semantic-ui-react'
 
 import { db } from './firebase'
+import * as DateUtils from './utils/DateUtils'
 
 import MarkAddForm from './MarkAddForm'
 import DeleteConfirmModal from './DeleteConfirmModal'
@@ -81,7 +82,8 @@ const MarkItem = ({ handleDelete, mark }) =>
         </Grid.Column>
         <Grid.Column>
           <Header size='medium' content={mark.subjectInitials}/>
-          <p>{new Date(mark.timestamp).toDateString()}</p>
+          {/* <p>{new Date(mark.timestamp).toDateString()}</p> */}
+          <p>{ DateUtils.getFormatedDate(mark.timestamp) }</p>
           <p>{mark.testName}</p>
         </Grid.Column>   
         <Grid.Column computer={2} tablet={3} floated='right' verticalAlign='middle'>
