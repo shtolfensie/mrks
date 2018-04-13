@@ -60,14 +60,14 @@ class MarkAddForm extends Component {
       const mark = {
         value: parseFloat(value),
         timestamp: new Date().valueOf(),
-        subjectInitials: this.getSubjectInitials(subjectId),
-        subjectId,
+        subjectInitials: testId === 'notest' ? this.getSubjectInitials(subjectId) : this.getSubjectInitials(this.getSubjectId(testId)),
+        subjectId: testId === 'notest' ? subjectId : this.getSubjectId(testId),
         testId,
         testName: this.getTestName(testId),
       }
   
       var markId = db.ref('marks-app/marks').push(mark).key;
-      db.ref(`marks-app/tests/${mark.testId}`).update({ markValue: parseFloat(value), markId });
+      if (testId !== 'notest') db.ref(`marks-app/tests/${mark.testId}`).update({ markValue: parseFloat(value), markId });
 
       this.handleClose();
     }
@@ -101,10 +101,22 @@ class MarkAddForm extends Component {
     }
   }
 
+  getSubjectId = (testId) => {
+    const {
+      tests
+    } = this.props;
+
+    for (var i = 0; i < tests.length; i++) {
+      if (tests[i].key === testId) return tests[i].subjectId;
+    }
+  }
+
   getTestName = (id) => {
     const {
       tests,
     } = this.props;
+
+    if (id === 'notest') { return 'No test' }
 
     for (var i = 0; i < tests.length; i++) {
       if (tests[i].key === id) {
@@ -146,12 +158,14 @@ class MarkAddForm extends Component {
     
     if (tests !== undefined) {
       for (var i = 0; i < tests.length; i++) {
+        if (!tests[i].markValue) {
         let test = {
           key: i + 1,
           text: tests[i].name,
           value: tests[i].key,
         };
         testOptions.push(test);
+      }
         
       }
     }
@@ -197,7 +211,7 @@ class MarkAddForm extends Component {
     return (
       <Modal
         trigger={<Button basic color='blue' animated='fade' onClick={this.handleOpen}>
-                  <Button.Content visible>Add Mark</Button.Content>
+                  <Button.Content visible>Add a Mark</Button.Content>
                   <Button.Content hidden><Icon name='plus'/></Button.Content>
                 </Button>}
         open={open}
@@ -206,15 +220,16 @@ class MarkAddForm extends Component {
         closeOnDocumentClick
         size='tiny'
       >
-        <Modal.Header>Add Mark</Modal.Header>
+        <Modal.Header>Add a Mark</Modal.Header>
         <Modal.Content>
           <p>Hello! Do you want to add some maks? Yeah. Me neither. But...</p>
           <Form error={isError} onSubmit={(e) => this.handleAdd(e)} >
             <Form.Group>
               <Form.Input value={value} onChange={(e) => this.setState({ value: e.target.value })} label='Add a Grade' placeholder='1-5' width={3}/>
               <Form.Dropdown label='Choose a Test' onChange={this.handleTestDropdown} value={testId} placeholder='Choose a Test' search selection options={testOptions}/>              
-              <Form.Dropdown disabled={fromSubjectCard && true} label='Choose a Subject' onChange={this.handleSubjectDropdown} value={subjectId} placeholder='Choose a Subject' search selection options={subjectOptions}/>
+              { testId === 'notest' && <Form.Dropdown disabled={fromSubjectCard && true} label='Choose a Subject' onChange={this.handleSubjectDropdown} value={subjectId} placeholder='Choose a Subject' search selection options={subjectOptions}/> }
             </Form.Group>
+            <Form.TextArea label='Description' />
             {/* <Form.Button onClick={this.handleAdd} positive>Add</Form.Button> */}
             <Message 
               error

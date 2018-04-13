@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Grid, Card, Button, Progress } from 'semantic-ui-react'
 
-import { List, Segment, Header, Icon, } from 'semantic-ui-react'
+import { List, Segment, Header, Icon, Menu, } from 'semantic-ui-react'
 
 import { db } from './firebase'
 
@@ -199,14 +199,21 @@ class SubjectCard extends Component {
           <Card.Content>
             {subjectTests.length}
           </Card.Content>
-          <Card.Content extra>
-          <Button.Group fluid widths='1' >
-            <MarkAddForm fromSubjectCard subjects={ [{ name, key, initials, teacher }] } tests={subjectTests} />
+          {/* <Card.Content extra>
+            <Button.Group fluid widths='1' >
+              <MarkAddForm fromSubjectCard subjects={ [{ name, key, initials, teacher }] } tests={subjectTests} />
+              <DeleteConfirmModal handleConfirm={() => handleDelete(key)} />
+            </Button.Group>
+          </Card.Content> */}
+          <Menu attached='bottom'>
             <TestAddForm fromSubjectCard subjects={ [{ name, key, initials, teacher }] }/>
-            {/* <DeleteButton onClick={() => handleDelete(key)} /> */}
-            <DeleteConfirmModal handleConfirm={() => handleDelete(key)} />
-          </Button.Group>
-          </Card.Content>
+            <Menu.Item>
+              <MarkAddForm fromSubjectCard subjects={ [{ name, key, initials, teacher }] } tests={subjectTests} />
+            </Menu.Item>
+            <Menu.Item>
+              <DeleteConfirmModal handleConfirm={() => handleDelete(key)} />
+            </Menu.Item>
+          </Menu>
         </Card>
     );
   }

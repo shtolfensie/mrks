@@ -7,9 +7,9 @@
 - like this, the app doesn't need to load them if they are not needed right away. At this time, that includes the `Home`, `Subjects`* and the `Tests` components.
 - if in the future the array is needed elswhere, it might be good to move the function to the `<App />` component.
 
-#### Mark add form subject issue
-- If user selects a test, then `subjectId` and `subjectInitials` should be taken from that tests properties.
-- Only if user selects **No test**, should the dropdown select appear, and the `subjectId` and `subjectInitials` should be taken from it.
+#### _DONE_: ~~Mark add form subject issue~~
+- ~~If user selects a test, then `subjectId` and `subjectInitials` should be taken from that tests properties.~~
+- ~~Only if user selects **No test**, should the dropdown select appear, and the `subjectId` and `subjectInitials` should be taken from it.~~
 
 
 ### Tests
@@ -30,3 +30,5 @@ This needs to be replaced by a vertical 'three dot' menu
   - this setup seems to work quite well (but the icons included in semantic react do not include three dot menu)
     - \<Menu borderless compact text>
       - \<Dropdown item icon='edit'>
+
+**Or maybe just use a 'pen'/'edit' icon and use it to open a modal.**
