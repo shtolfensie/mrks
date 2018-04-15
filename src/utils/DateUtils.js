@@ -1,5 +1,6 @@
 import moment from 'moment'
 import 'moment/locale/cs'
+import { toASCII } from 'punycode';
 
 moment.locale('cs');
 
@@ -29,4 +30,16 @@ export const getFormatedDate = (date) => {
   // console.log( moment.locale() );
   
   return moment(Number(date)).format('dddd, D. M. YYYY')
+}
+
+export const isInRange = (test, range) => {
+  let d = moment(Number(test.dueDate));
+  let today = moment().format('MM-DD-YYYY');
+  
+  if (range === 'today' && d.diff(today, 'days') === 0) return true;
+  else if (range === 'tomorrow' && d.diff(today, 'days') === 1) return true;
+  else if (range === 'week' && d.diff(today, 'weeks') === 0) return true;
+  else if (range === 'month' && d.diff(today, 'months') === 0) return true;
+  else if (range === 'upcoming' && d.diff(today, 'days') >= 0) return true;
+  else return false; 
 }

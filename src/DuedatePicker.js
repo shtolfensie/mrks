@@ -75,7 +75,7 @@ class DuedatePicker extends Component {
   handleCalendarPick = () => {
     this.options.push({
       key: this.options.length + 1,
-      text: this.state.pickedDate.toDateString(),
+      text: DateUtils.getFormatedDate(this.state.pickedDate),
       value: this.state.pickedDate.valueOf(),
     });
 

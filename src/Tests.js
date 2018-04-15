@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { List, Header, Segment, Loader, } from 'semantic-ui-react'
+import { List, Header, Segment, Loader, Input, } from 'semantic-ui-react'
 
 import { db } from './firebase'
 
@@ -21,21 +21,27 @@ class Tests extends Component {
       loading: true,
       groupedTests: {},
       groupBy: 'dueDate',
-      filterBy: (o) => { return !o.markValue },
-      showGraded: false,
-    }
+      filterBy: {
+        date: 'upcoming',
+        search: false,
+        subject: false,
+        showGraded: false,
+      },
+    };
   }
 
   componentDidMount() {
-    this.getFilteredTests(this.state.filterBy);
+    this.getFilteredTests(this.doFilter);
   }
 
   componentDidUpdate(prevProps, prevState) {
+    // console.log(prevState.filterBy);
+    // console.log(this.state.filterBy);
     if (prevState.filteredTests !== this.state.filteredTests || prevState.groupBy !== this.state.groupBy) {
       this.getGroupedTests(this.state.groupBy);
     }
-    if (prevState.filterBy !== this.state.filterBy || prevProps.tests !== this.props.tests) {
-      this.getFilteredTests(this.state.filterBy);
+    if (!_.isEqual(prevState.filterBy, this.state.filterBy) || prevProps.tests !== this.props.tests) {
+      this.getFilteredTests(this.doFilter);
     }
 
     if (Object.keys(this.state.groupedTests).length !== 0 && this.state.loading) {
@@ -47,9 +53,10 @@ class Tests extends Component {
     db.ref(`marks-app/tests/${id}`).remove();
   }
 
-  getFilteredTests = (filterBy) => {
+  getFilteredTests = (doFilter) => {
+    // alert(1);
     this.setState({
-      filteredTests: _.filter(this.props.tests, filterBy)
+      filteredTests: _.filter(this.props.tests, doFilter)
     });
   }
 
@@ -64,20 +71,38 @@ class Tests extends Component {
   }
 
   handleGradedChange = () => {
-    let showGraded = this.state.showGraded;
-    this.setState({ showGraded: !showGraded });
+    let oldFilterBy = Object.assign({}, this.state.filterBy);
+    oldFilterBy.showGraded = !oldFilterBy.showGraded;
+    this.setState({ filterBy: oldFilterBy });
+  }
 
-    if (!showGraded) {
-      this.setState({
-        filterBy: (o) => { return true },
-      });
-    }
-    else {
-      this.setState({
-        filterBy: (o) => { return !o.markValue },
-      });
-    }
+  handleRangeChange = (range) => {
+    let oldFilterBy = Object.assign({}, this.state.filterBy);
+    oldFilterBy.date = range;
+    this.setState({ filterBy: oldFilterBy });
+  }
 
+  handleSubjectFilterChange = (e) => {
+    let oldFilterBy = Object.assign({}, this.state.filterBy);
+    oldFilterBy.subject = e.target.value;
+    this.setState({ filterBy: oldFilterBy });
+  }
+
+  handleSearchFilterChange = (e) => {
+    let oldFilterBy = Object.assign({}, this.state.filterBy);
+    oldFilterBy.search = e.target.value;
+    this.setState({ filterBy: oldFilterBy });
+  }
+
+  doFilter = (ob) => {
+    const {
+      filterBy
+    } = this.state;
+    if (!filterBy.showGraded && ob.markValue) return false;
+    else if (filterBy.subject && ob.subjectInitials !== filterBy.subject) return false;
+    else if (filterBy.search && ob.name !== filterBy.search) return false;
+    else if (filterBy.date !== false && !DateUtils.isInRange(ob, filterBy.date)) return false;
+    else return true;
   }
 
   render() {
@@ -86,7 +111,7 @@ class Tests extends Component {
       loading,
       groupedTests,
       groupBy,
-      showGraded,
+      filterBy,
     } = this.state;
 
     const {
@@ -96,10 +121,17 @@ class Tests extends Component {
       loadingTests,
     } = this.props;
 
+    const {
+      showGraded,
+      date,
+    } = filterBy;
+
     return (
       <div>
         {/* <TestAddForm subjects={subjects} /> */}
-        <AgendaSubMenu showGraded={showGraded} groupBy={groupBy} handleGradedChange={this.handleGradedChange} handleGroupByChange={this.handleGroupByChange} subjects={subjects} />
+        <Input type='text' onChange={(e) => this.handleSubjectFilterChange(e)} />
+        <Input type='text' onChange={(e) => this.handleSearchFilterChange(e)} />
+        <AgendaSubMenu handleSearchFilterChange={this.handleSearchFilterChange} showGraded={showGraded} date={date} groupBy={groupBy} handleRangeChange={this.handleRangeChange} handleGradedChange={this.handleGradedChange} handleGroupByChange={this.handleGroupByChange} subjects={subjects} />
         <Segment attached='bottom'>
         <Loader active={loadingTests}/>
           {/* { fromAgenda !== true && <AgendaSubMenu subjects={subjects} /> } */}
