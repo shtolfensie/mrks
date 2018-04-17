@@ -1,5 +1,7 @@
-import { db } from './firebase'
+import { db, auth, providerGoogle, } from './firebase'
 
 export {
-  db
+  db,
+  auth,
+  providerGoogle,
 }

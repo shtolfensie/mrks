@@ -2,12 +2,12 @@
  
  // Initialize Firebase
   var config = {
-    apiKey: "AIzaSyBL5ADb05I6Fuf5J5de0EJHmff45h3-gNk",
-    authDomain: "life-69419.firebaseapp.com",
-    databaseURL: "https://life-69419.firebaseio.com",
-    projectId: "life-69419",
-    storageBucket: "life-69419.appspot.com",
-    messagingSenderId: "840427893914"
+    apiKey: "AIzaSyBr7KSSCpM-cJMPgHqHKeS8ALL_069cyAs",
+    authDomain: "marks-2f905.firebaseapp.com",
+    databaseURL: "https://marks-2f905.firebaseio.com",
+    projectId: "marks-2f905",
+    storageBucket: "marks-2f905.appspot.com",
+    messagingSenderId: "989220054028"
   };
 
   if (!firebase.apps.length) {
@@ -16,8 +16,11 @@
   
   const auth = firebase.auth();
   const db = firebase.database();
+
+  const providerGoogle = new firebase.auth.GoogleAuthProvider();
   
   export {
     auth,
     db,
+    providerGoogle,
   };

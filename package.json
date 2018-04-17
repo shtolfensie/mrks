@@ -5,6 +5,7 @@
   "dependencies": {
     "firebase": "^4.10.1",
     "firebase-admin": "5.9.0",
+    "firebaseui": "^2.7.0",
     "lodash": "^4.17.5",
     "moment": "^2.21.0",
     "react": "^16.2.0",

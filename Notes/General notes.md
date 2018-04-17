@@ -21,6 +21,7 @@
 - show graded should be controled from tests component. But it is controlled in submenu.
 - use regexp for searching
 - finish subject filter
+- teacher field in subject is probably not required
 
 #### Filtering of `test` array
 - Right now the only filter available is **Include graded** and the current setup doesn't allow for chaining of filters.

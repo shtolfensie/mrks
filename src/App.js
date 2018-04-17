@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import GridColumn, { Grid } from 'semantic-ui-react'
 
-import { db } from './firebase'
+import { db, auth } from './firebase'
+
+import SignInButton from './SignIn'
 
 import MainMenu from './MainMenu'
 import Subjects from './Subjects.js'
@@ -29,14 +31,15 @@ class App extends Component {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
+    this.getCurrentUser();
     this.getAllSubjects();
     this.getAllTests();
   }
 
   getAllSubjects = () => {
     let subjects = [];
-    db.ref('/marks-app/subjects').orderByKey().on('value', snapshot => {
+    db.ref('/marks-app/subjects').orderByChild('name').on('value', snapshot => {
       snapshot.forEach(data => {
         subjects.push({
           name: data.val().name,
@@ -89,6 +92,19 @@ class App extends Component {
     }
   };
 
+  getCurrentUser = () => {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        alert(1);
+        console.log(user);
+        console.log(auth.currentUser.getIdToken());
+      } else {
+        alert(2);
+      }
+    });
+
+  }
+
   render() {
 
     const {
@@ -112,6 +128,7 @@ class App extends Component {
           <MainMenu activeItem={activeItem} handleItemClick={this.handleMenuItemClick}/>
         </Grid.Column>
         <Grid.Column width={14} style={{ padding: '0'}}>
+          <SignInButton />
           { activeItem === 'home' && <HomePage /> }
           { activeItem === 'marks' && <Marks subjects={subjects} tests={tests}/> }
           { activeItem === 'subjects' && <Subjects subjects={subjects} tests={tests}/> }
