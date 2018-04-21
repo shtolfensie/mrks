@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 
-import { Button, } from 'semantic-ui-react'
+import { Button, Grid, } from 'semantic-ui-react'
 
 import { auth, providerGoogle } from './firebase'
-
 
 
 const SignInButton = (props) => {
@@ -16,7 +15,7 @@ const SignInButton = (props) => {
       var user = result.user;
       
       console.log(user);
-      console.log(token);
+      // console.log(token);
       
   
     }).catch(function(error) {
@@ -32,14 +31,14 @@ const SignInButton = (props) => {
   }
 
   return (
-    <div>
-      <Button onClick={handleGoogleSignIn} >
-        Sign In
-      </Button>
-      <Button onClick={() => auth.signOut()} >
-        Sign Out
-      </Button>
-    </div>
+    <Grid textAlign='center' verticalAlign='middle' style={{ height: '100vh' }}>
+      <Grid.Column>
+        <div>Hi there, please log in.</div>
+        <Button onClick={handleGoogleSignIn} >
+          Sign In
+        </Button>
+      </Grid.Column>
+    </Grid>
   )
 }
 
