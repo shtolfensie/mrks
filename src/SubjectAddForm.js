@@ -31,7 +31,9 @@ class SubjectAddForm extends Component {
     });
   }
 
-  handleAdd = () => {
+  handleAdd = (user) => {
+    console.log(user);
+    
     const {
       name,
       initials,
@@ -48,7 +50,7 @@ class SubjectAddForm extends Component {
         teacher,
       }
   
-      var subjectsRef = db.ref('/marks-app/subjects').push(subject);
+      var subjectsRef = db.ref(`/marks-app/${user.uid}/subjects`).push(subject);
       // var subjectRef = db.ref('/marks-app/subjects').orderByKey().once('value').then(snapshot => {
       //   snapshot.forEach(data => {
       //     console.log(data.val().name);
@@ -71,7 +73,7 @@ class SubjectAddForm extends Component {
 
     return (
       <UserContext.Consumer>
-
+        {user => (
         <Modal
           trigger={<Button animated='fade' onClick={this.handleOpen}>
                     <Button.Content visible>Add a Subject</Button.Content>
@@ -100,9 +102,10 @@ class SubjectAddForm extends Component {
           </Modal.Content>
           <Modal.Actions>
             <Button basic onClick={this.handleClose}>Cancel</Button>
-            <Button positive onClick={this.handleAdd}>Add</Button>
+            <Button positive onClick={() => this.handleAdd(user)}>Add</Button>
           </Modal.Actions>
         </Modal>
+        )}
       </UserContext.Consumer>
     )
   }

@@ -15,9 +15,11 @@ import Agenda from './Agenda'
 export const UserContext = React.createContext({ user: null });
 
 const INITIAL_STATE = {
+  // rename this you fuckhead
   activeItem: 'agenda',
   subjects: [],
   tests: [],
+  marks: [],
   loadingTests: true,
   user: false,
 }
@@ -43,7 +45,8 @@ class App extends Component {
     if ((prevState.user === null || prevState.user === false) && this.state.user) {
       this.getAllSubjects();
       this.getAllTests();
-      alert(4)
+      this.getAllMarks();
+      // alert(4)
     }
 
     if (prevState.user !== null && this.state.user === null) this.setState(CLEAR_STATE);
@@ -56,6 +59,7 @@ class App extends Component {
     if (this.state.user !== null && this.state.user !== false) {
       this.getAllSubjects();
       this.getAllTests();
+      this.getAllMarks();
     }
   }
 
@@ -102,6 +106,26 @@ class App extends Component {
     });
   }
 
+  getAllMarks = () => {
+    const { user } = this.state;
+    let marksArr = [];
+    db.ref(`/marks-app/${user.uid}/marks`).orderByKey().on('value', snapshot => {
+      snapshot.forEach(mark => {
+        marksArr.push({
+          value: mark.val().value,
+          subjectId: mark.val().subjectId,
+          subjectInitials: mark.val().subjectInitials,
+          timestamp: mark.val().timestamp,
+          key: mark.key,
+          testId: mark.val().testId,
+          testName: mark.val().testName,
+        }); 
+      });
+      this.setState({ marks: marksArr });
+      marksArr = [];
+    });
+  }
+
   handleMenuItemClick = (e, {name}) => {
     this.setState({ activeItem: name })
   }
@@ -137,6 +161,7 @@ class App extends Component {
       activeItem,
       subjects,
       tests,
+      marks,
       loadingTests,
       user,
     } = this.state;
@@ -162,10 +187,10 @@ class App extends Component {
             <Grid.Column width={14} style={{ padding: '0'}}>
               <Button onClick={() => auth.signOut()} >Sign Out</Button>
               { activeItem === 'home' && <HomePage /> }
-              { activeItem === 'marks' && <Marks subjects={subjects} tests={tests}/> }
+              { activeItem === 'marks' && <Marks marks={marks} subjects={subjects} tests={tests}/> }
               { activeItem === 'subjects' && <Subjects subjects={subjects} tests={tests}/> }
               { activeItem === 'tests' && <Tests loadingTests={loadingTests} subjects={subjects} tests={tests}/> }
-              { activeItem === 'agenda' && <Agenda loadingTests={loadingTests} subjects={subjects} tests={tests}/> }
+              { activeItem === 'agenda' && <Agenda loadingTests={loadingTests} marks={marks} subjects={subjects} tests={tests}/> }
             </Grid.Column>
           </Grid>
         }

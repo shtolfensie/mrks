@@ -16,31 +16,6 @@ class Marks extends Component {
     }
   }
 
-  componentWillMount() {
-    this.getAllMarks();
-    console.log('hi');
-    
-  }
-
-  getAllMarks = () => {
-    let marksArr = [];
-    db.ref('/marks-app/marks').orderByKey().on('value', snapshot => {
-      snapshot.forEach(mark => {
-        marksArr.push({
-          value: mark.val().value,
-          subjectId: mark.val().subjectId,
-          subjectInitials: mark.val().subjectInitials,
-          timestamp: mark.val().timestamp,
-          key: mark.key,
-          testId: mark.val().testId,
-          testName: mark.val().testName,
-        }); 
-      });
-      this.setState({ marks: marksArr });
-      marksArr = [];
-    });
-  }
-
   handleDelete = (id) => {
     db.ref(`marks-app/marks/${id}`).remove();
   }
@@ -50,12 +25,9 @@ class Marks extends Component {
   render() {
 
     const {
-      marks
-    } = this.state;
-
-    const {
       subjects,
       tests,
+      marks,
     } = this.props;
 
     return(

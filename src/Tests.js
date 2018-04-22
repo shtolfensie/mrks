@@ -50,7 +50,7 @@ class Tests extends Component {
   }
 
   handleDelete = (id) => {
-    db.ref(`marks-app/tests/${id}`).remove();
+    db.ref(`marks-app/${}/tests/${id}`).remove();
   }
 
   getFilteredTests = (doFilter) => {
@@ -89,6 +89,8 @@ class Tests extends Component {
   }
 
   handleSearchFilterChange = (e) => {
+    // Use REGEXP!
+    // !!!!!!!!!!!
     let oldFilterBy = Object.assign({}, this.state.filterBy);
     oldFilterBy.search = e.target.value;
     this.setState({ filterBy: oldFilterBy });
@@ -128,9 +130,8 @@ class Tests extends Component {
 
     return (
       <div>
-        {/* <TestAddForm subjects={subjects} /> */}
-        <Input type='text' onChange={(e) => this.handleSubjectFilterChange(e)} />
-        <Input type='text' onChange={(e) => this.handleSearchFilterChange(e)} />
+        {/* Input for subject filter (only Fy, Cj, ...), should add a dropdown menu with all the available subjects on the future */}
+        {/* <Input type='text' onChange={(e) => this.handleSubjectFilterChange(e)} /> */}
         <AgendaSubMenu handleSearchFilterChange={this.handleSearchFilterChange} showGraded={showGraded} date={date} groupBy={groupBy} handleRangeChange={this.handleRangeChange} handleGradedChange={this.handleGradedChange} handleGroupByChange={this.handleGroupByChange} subjects={subjects} />
         <Segment attached='bottom'>
         <Loader active={loadingTests}/>

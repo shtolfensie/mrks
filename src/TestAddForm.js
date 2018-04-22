@@ -5,6 +5,8 @@ import { Modal, Button, Icon, Form, Dropdown, Message, Menu, } from 'semantic-ui
 
 import * as DateUtils from './utils/DateUtils'
 
+import { UserContext } from './App'
+
 import DuedatePicker from './DuedatePicker'
 
 const INITIAL_STATE = {
@@ -41,8 +43,7 @@ class TestAddForm extends Component {
     this.setState(INITIAL_STATE);
   }
 
-  handleAdd = (e) => {
-    e.preventDefault();
+  handleAdd = (user) => {
 
     const {
       name,
@@ -63,7 +64,7 @@ class TestAddForm extends Component {
         subjectId,
       }
   
-      db.ref('marks-app/tests').push(test);
+      db.ref(`marks-app/${user.uid}/tests`).push(test);
 
       this.handleClose();
     }
@@ -169,38 +170,42 @@ class TestAddForm extends Component {
     // ]
 
     return (
-      <Modal
-        trigger={ <Menu.Item onClick={this.handleOpen}>Add a Test</Menu.Item> }
-        open={open}
-        onClose={this.handleClose}
-        dimmer={false}
-        closeOnDocumentClick={onDocClick}
-        style={{ zIndex: '999' }}
-      >
-        <Modal.Header>Add Test</Modal.Header>
-        <Modal.Content>
-          <p>Oh no. You have another? That sucks. Well...</p>
-          <Form error={isError}>
-            <Form.Group>
-              <Form.Input value={name} onChange={(e) => this.setState({ name: e.target.value })} label='Add a Name' placeholder='' />
-              {/* <Form.Input value={dueDate} onChange={(e) => this.setState({ dueDate: e.target.value })} label='Add a Due Date' /> */}
-              <DuedatePicker onOpenChange={this.handleOpenChage} value={dueDate} onChange={(e, { value }) => this.setState({ dueDate: value })} label='Add a Due Date' placeholder='Add a Due Date'/>
-              <Form.Dropdown disabled={fromSubjectCard && true} label='Choose a Subject' onChange={this.handleDropdown} value={subjectId} placeholder='Choose a Subject' search selection options={subjectOptions}/>
-            </Form.Group>
-            <Form.TextArea label='Description' placeholder='Placeholder...' autoHeight style={{ maxHeight: 300 }} rows={3}/>
-            {/* <Form.Button onClick={this.handleAdd} positive>Add</Form.Button> */}
-            <Message 
-              error
-              header='All fields are required'
-              content='Please fill in all fields of the form.'
-            />
-          </Form>
-        </Modal.Content>
-        <Modal.Actions>
-          <Button basic onClick={this.handleClose}>Cancel</Button>
-          <Button positive onClick={this.handleAdd}>Add</Button>
-        </Modal.Actions>
-      </Modal>
+      <UserContext.Consumer>
+      { user => (
+        <Modal
+          trigger={ <Menu.Item onClick={this.handleOpen}>Add a Test</Menu.Item> }
+          open={open}
+          onClose={this.handleClose}
+          dimmer={false}
+          closeOnDocumentClick={onDocClick}
+          style={{ zIndex: '999' }}
+        >
+          <Modal.Header>Add Test</Modal.Header>
+          <Modal.Content>
+            <p>Oh no. You have another? That sucks. Well...</p>
+            <Form error={isError}>
+              <Form.Group>
+                <Form.Input value={name} onChange={(e) => this.setState({ name: e.target.value })} label='Add a Name' placeholder='' />
+                {/* <Form.Input value={dueDate} onChange={(e) => this.setState({ dueDate: e.target.value })} label='Add a Due Date' /> */}
+                <DuedatePicker onOpenChange={this.handleOpenChage} value={dueDate} onChange={(e, { value }) => this.setState({ dueDate: value })} label='Add a Due Date' placeholder='Add a Due Date'/>
+                <Form.Dropdown disabled={fromSubjectCard && true} label='Choose a Subject' onChange={this.handleDropdown} value={subjectId} placeholder='Choose a Subject' search selection options={subjectOptions}/>
+              </Form.Group>
+              <Form.TextArea label='Description' placeholder='Placeholder...' autoHeight style={{ maxHeight: 300 }} rows={3}/>
+              {/* <Form.Button onClick={this.handleAdd} positive>Add</Form.Button> */}
+              <Message 
+                error
+                header='All fields are required'
+                content='Please fill in all fields of the form.'
+              />
+            </Form>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button basic onClick={this.handleClose}>Cancel</Button>
+            <Button positive onClick={() => this.handleAdd(user)}>Add</Button> 
+          </Modal.Actions>
+        </Modal>
+      )}
+      </UserContext.Consumer>
     );
   }
 }

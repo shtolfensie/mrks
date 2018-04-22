@@ -3,6 +3,8 @@ import { db } from './firebase'
 
 import { Modal, Button, Icon, Form, Dropdown, Message, } from 'semantic-ui-react'
 
+import { UserContext } from './App'
+
 
 const INITIAL_STATE = {
   open: false,
@@ -41,9 +43,7 @@ class MarkAddForm extends Component {
     this.setState(INITIAL_STATE);
   }
 
-  handleAdd = (e) => {
-    e.preventDefault();
-
+  handleAdd = (user) => {
     const {
       value,
       timestamp,
@@ -66,8 +66,8 @@ class MarkAddForm extends Component {
         testName: this.getTestName(testId),
       }
   
-      var markId = db.ref('marks-app/marks').push(mark).key;
-      if (testId !== 'notest') db.ref(`marks-app/tests/${mark.testId}`).update({ markValue: parseFloat(value), markId });
+      var markId = db.ref(`marks-app/${user.uid}/marks`).push(mark).key;
+      if (testId !== 'notest') db.ref(`marks-app/tests/${user.uid}/${mark.testId}`).update({ markValue: parseFloat(value), markId });
 
       this.handleClose();
     }
@@ -209,6 +209,8 @@ class MarkAddForm extends Component {
     // ]
 
     return (
+      <UserContext.Consumer>
+      {user => (
       <Modal
         trigger={<Button basic color='blue' animated='fade' onClick={this.handleOpen}>
                   <Button.Content visible>Add a Mark</Button.Content>
@@ -223,7 +225,7 @@ class MarkAddForm extends Component {
         <Modal.Header>Add a Mark</Modal.Header>
         <Modal.Content>
           <p>Hello! Do you want to add some maks? Yeah. Me neither. But...</p>
-          <Form error={isError} onSubmit={(e) => this.handleAdd(e)} >
+          <Form error={isError} >
             <Form.Group>
               <Form.Input value={value} onChange={(e) => this.setState({ value: e.target.value })} label='Add a Grade' placeholder='1-5' width={3}/>
               <Form.Dropdown label='Choose a Test' onChange={this.handleTestDropdown} value={testId} placeholder='Choose a Test' search selection options={testOptions}/>              
@@ -240,9 +242,12 @@ class MarkAddForm extends Component {
         </Modal.Content>
         <Modal.Actions>
           <Button basic onClick={this.handleClose}>Cancel</Button>
-          <Button positive onClick={this.handleAdd}>Add</Button>
+          {/* User object from context */}
+          <Button positive onClick={() => this.handleAdd(user)}>Add</Button> 
         </Modal.Actions>
       </Modal>
+      )}
+      </UserContext.Consumer>
     );
   }
 }

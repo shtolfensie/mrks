@@ -28,6 +28,7 @@ class Agenda extends Component {
     const {
       subjects,
       tests,
+      marks,
       loadingTests,
     } = this.props;
 
@@ -148,7 +149,7 @@ class Agenda extends Component {
               </Menu.Menu>
             </Menu>
             <Segment attached='bottom' >
-              <Marks subjects={subjects} tests={tests}/>
+              <Marks marks={marks} subjects={subjects} tests={tests}/>
             </Segment>
           </Grid.Column>
           <Grid.Column></Grid.Column>
