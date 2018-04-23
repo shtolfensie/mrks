@@ -9,10 +9,11 @@ import MainMenu from './MainMenu'
 import Subjects from './Subjects.js'
 import Marks from './Marks'
 import HomePage from './Home'
-import Tests from './Tests'
+// import Tests from './Tests'
 import Agenda from './Agenda'
 
 export const UserContext = React.createContext({ user: null });
+export const SettingsContext = React.createContext({ settings: null });
 
 const INITIAL_STATE = {
   // rename this you fuckhead
@@ -46,6 +47,7 @@ class App extends Component {
       this.getAllSubjects();
       this.getAllTests();
       this.getAllMarks();
+      this.getUserSettings();
       // alert(4)
     }
 
@@ -60,6 +62,7 @@ class App extends Component {
       this.getAllSubjects();
       this.getAllTests();
       this.getAllMarks();
+      this.getUserSettings();
     }
   }
 
@@ -152,7 +155,13 @@ class App extends Component {
         this.setState({ user: null });
       }
     });
+  }
 
+  getUserSettings = () => {
+    db.ref(`marks-app/${this.state.user.uid}/settings`).on('value', snapshot => {
+      // console.log(snapshot.val());
+      this.setState({ settings: snapshot.val() });
+    })
   }
 
   render() {
@@ -164,6 +173,7 @@ class App extends Component {
       marks,
       loadingTests,
       user,
+      settings,
     } = this.state;
 
     return (
@@ -180,19 +190,21 @@ class App extends Component {
         :
           user === null
         ? <SignInPage />
-        : <Grid columns={2} padded>
-            <Grid.Column width={2}>
-              <MainMenu activeItem={activeItem} handleItemClick={this.handleMenuItemClick}/>
-            </Grid.Column>
-            <Grid.Column width={14} style={{ padding: '0'}}>
-              <Button onClick={() => auth.signOut()} >Sign Out</Button>
-              { activeItem === 'home' && <HomePage /> }
-              { activeItem === 'marks' && <Marks marks={marks} subjects={subjects} tests={tests}/> }
-              { activeItem === 'subjects' && <Subjects subjects={subjects} tests={tests}/> }
-              { activeItem === 'tests' && <Tests loadingTests={loadingTests} subjects={subjects} tests={tests}/> }
-              { activeItem === 'agenda' && <Agenda loadingTests={loadingTests} marks={marks} subjects={subjects} tests={tests}/> }
-            </Grid.Column>
-          </Grid>
+        : <SettingsContext.Provider value={settings}>
+            <Grid columns={2} padded>
+                <Grid.Column width={2}>
+                  <MainMenu activeItem={activeItem} handleItemClick={this.handleMenuItemClick}/>
+                </Grid.Column>
+                <Grid.Column width={14} style={{ padding: '0'}}>
+                  <Button onClick={() => auth.signOut()} >Sign Out</Button>
+                  { activeItem === 'home' && <HomePage /> }
+                  { activeItem === 'marks' && <Marks marks={marks} subjects={subjects} tests={tests}/> }
+                  { activeItem === 'subjects' && <Subjects user={user} subjects={subjects} tests={tests}/> }
+                  {/* { activeItem === 'tests' && <Tests loadingTests={loadingTests} subjects={subjects} tests={tests}/> } */}
+                  { activeItem === 'agenda' && <Agenda loadingTests={loadingTests} marks={marks} subjects={subjects} tests={tests}/> }
+                </Grid.Column>
+              </Grid>
+        </SettingsContext.Provider>
         }
       </UserContext.Provider>
 

@@ -11,6 +11,9 @@ import TestAddForm from './TestAddForm'
 import DeleteConfirmModal from './DeleteConfirmModal'
 import AgendaSubMenu from './AgendaSubMenu'
 
+import { UserContext } from './App'
+import { SettingsContext } from './App'
+
 
 class Tests extends Component {
 
@@ -31,7 +34,14 @@ class Tests extends Component {
   }
 
   componentDidMount() {
+    const { settings } = this.props;
     this.getFilteredTests(this.doFilter);
+    if (settings !== undefined && settings !== null && settings.tests !== undefined) {
+      this.setState({
+        filterBy: settings.tests.filterBy,
+        groupBy: settings.tests.groupBy,
+      });
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -44,13 +54,25 @@ class Tests extends Component {
       this.getFilteredTests(this.doFilter);
     }
 
+    if (!_.isEqual(prevState.filterBy, this.state.filterBy)) {
+      db.ref(`marks-app/${this.props.user.uid}/settings/tests/filterBy`).update(this.state.filterBy);
+    }
+
+    if (prevState.groupBy !== this.state.groupBy) {
+      db.ref(`marks-app/${this.props.user.uid}/settings/tests`).update({groupBy: this.state.groupBy});
+    }
+
     if (Object.keys(this.state.groupedTests).length !== 0 && this.state.loading) {
       this.setState({ loading: false });
+    }
+
+    if (prevProps.settings !== this.props.settings && this.props.settings.tests.filterBy !== undefined && this.props.settings.tests.groupBy) {
+      this.setState({ filterBy: this.props.settings.tests.filterBy, groupBy: this.props.settings.tests.groupBy });      
     }
   }
 
   handleDelete = (id) => {
-    db.ref(`marks-app/${}/tests/${id}`).remove();
+    db.ref(`marks-app/${this.props.user.uid}/tests/${id}`).remove();
   }
 
   getFilteredTests = (doFilter) => {
@@ -58,6 +80,7 @@ class Tests extends Component {
     this.setState({
       filteredTests: _.filter(this.props.tests, doFilter)
     });
+    
   }
 
   getGroupedTests = (groupBy) => {

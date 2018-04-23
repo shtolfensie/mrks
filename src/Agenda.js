@@ -2,9 +2,12 @@ import React, { Component } from 'react'
 
 import { Segment, Grid, Header, Menu, Dropdown, Icon} from 'semantic-ui-react'
 
+import { UserContext } from './App'
+import { SettingsContext } from './App'
+
 import Tests from './Tests'
 import Marks from './Marks'
-import AgendaSubMenu from './AgendaSubMenu';
+import AgendaSubMenu from './AgendaSubMenu'
 
 class Agenda extends Component {
   constructor(props) {
@@ -92,70 +95,78 @@ class Agenda extends Component {
       //     </Segment>
       //   </Grid.Column>
       // </Grid>
-    <div>
-      <Segment style={{ margin: '1rem 1rem 0 1rem'}}>
-      <Grid columns={3} padded>
-        <Grid.Row>
-          <Grid.Column style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-            <Header textAlign='center' size='large' content='Tests' />
-            <div style={{ borderBottom: '2px solid red', width: '75%'}}></div>
-          </Grid.Column>
-          <Grid.Column style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-            <Header textAlign='center' size='large' content='Homework' />
-            <div style={{ borderBottom: '2px solid red', width: '75%'}}></div>            
-          </Grid.Column>
-          <Grid.Column style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-            <Header textAlign='center' size='large' content='Reminders' />
-            <div style={{ borderBottom: '2px solid red', width: '75%'}}></div>            
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
-      </Segment>
-      <Grid columns={3} padded>
-        <Grid.Row>
-          <Grid.Column>
-            <Tests loadingTests={loadingTests} subjects={subjects} tests={tests} fromAgenda={true}/>
-          </Grid.Column>
-          <Grid.Column>
-          <Menu attached='top'>
-              <Dropdown item icon='bars' simple>
-                <Dropdown.Menu>
-                  <Dropdown.Item>
-                    <Icon name='dropdown' />
-                    <span className='text'>New</span>
+    <UserContext.Consumer>
+      { user => (
+        <div>
+          <Segment style={{ margin: '1rem 1rem 0 1rem'}}>
+          <Grid columns={3} padded>
+            <Grid.Row>
+              <Grid.Column style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                <Header textAlign='center' size='large' content='Tests' />
+                <div style={{ borderBottom: '2px solid red', width: '75%'}}></div>
+              </Grid.Column>
+              <Grid.Column style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                <Header textAlign='center' size='large' content='Homework' />
+                <div style={{ borderBottom: '2px solid red', width: '75%'}}></div>            
+              </Grid.Column>
+              <Grid.Column style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                <Header textAlign='center' size='large' content='Reminders' />
+                <div style={{ borderBottom: '2px solid red', width: '75%'}}></div>            
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+          </Segment>
+          <SettingsContext.Consumer>
+            { settings => (
+            <Grid columns={3} padded>
+              <Grid.Row>
+                <Grid.Column>
+                  <Tests settings={settings} user={user} loadingTests={loadingTests} subjects={subjects} tests={tests} fromAgenda={true}/>
+                </Grid.Column>
+                <Grid.Column>
+                <Menu attached='top'>
+                    <Dropdown item icon='bars' simple>
+                      <Dropdown.Menu>
+                        <Dropdown.Item>
+                          <Icon name='dropdown' />
+                          <span className='text'>New</span>
 
-                    <Dropdown.Menu>
-                      <Dropdown.Item>Document</Dropdown.Item>
-                      <Dropdown.Item>Image</Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown.Item>
-                  <Dropdown.Item>Open</Dropdown.Item>
-                  <Dropdown.Item>Save...</Dropdown.Item>
-                  <Dropdown.Item>Edit Permissions</Dropdown.Item>
-                  <Dropdown.Divider />
-                  <Dropdown.Header>Export</Dropdown.Header>
-                  <Dropdown.Item>Share</Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
+                          <Dropdown.Menu>
+                            <Dropdown.Item>Document</Dropdown.Item>
+                            <Dropdown.Item>Image</Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown.Item>
+                        <Dropdown.Item>Open</Dropdown.Item>
+                        <Dropdown.Item>Save...</Dropdown.Item>
+                        <Dropdown.Item>Edit Permissions</Dropdown.Item>
+                        <Dropdown.Divider />
+                        <Dropdown.Header>Export</Dropdown.Header>
+                        <Dropdown.Item>Share</Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
 
-              <Menu.Menu position='right'>
-                <div className='ui right aligned category search item'>
-                  <div className='ui transparent icon input'>
-                    <input className='prompt' type='text' placeholder='Search tests...' />
-                    <i className='search link icon' />
-                  </div>
-                  <div className='results' />
-                </div>
-              </Menu.Menu>
-            </Menu>
-            <Segment attached='bottom' >
-              <Marks marks={marks} subjects={subjects} tests={tests}/>
-            </Segment>
-          </Grid.Column>
-          <Grid.Column></Grid.Column>
-        </Grid.Row>
-      </Grid>
-      </div>
+                    <Menu.Menu position='right'>
+                      <div className='ui right aligned category search item'>
+                        <div className='ui transparent icon input'>
+                          <input className='prompt' type='text' placeholder='Search tests...' />
+                          <i className='search link icon' />
+                        </div>
+                        <div className='results' />
+                      </div>
+                    </Menu.Menu>
+                  </Menu>
+                  <Segment attached='bottom' >
+                    <Marks user={user} marks={marks} subjects={subjects} tests={tests}/>
+                  </Segment>
+                </Grid.Column>
+                <Grid.Column></Grid.Column>
+              </Grid.Row>
+            </Grid>
+            )}
+          </SettingsContext.Consumer>
+        </div>
+      )}
+      </UserContext.Consumer>
     )
   }
 }

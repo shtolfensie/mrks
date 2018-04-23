@@ -67,7 +67,7 @@ class MarkAddForm extends Component {
       }
   
       var markId = db.ref(`marks-app/${user.uid}/marks`).push(mark).key;
-      if (testId !== 'notest') db.ref(`marks-app/tests/${user.uid}/${mark.testId}`).update({ markValue: parseFloat(value), markId });
+      if (testId !== 'notest') db.ref(`marks-app/${user.uid}/tests/${mark.testId}`).update({ markValue: parseFloat(value), markId });
 
       this.handleClose();
     }

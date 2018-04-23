@@ -17,7 +17,11 @@ class Marks extends Component {
   }
 
   handleDelete = (id) => {
-    db.ref(`marks-app/marks/${id}`).remove();
+    const markRef = db.ref(`marks-app/${this.props.user.uid}/marks/${id}`);
+    markRef.once('value', mark => {
+      db.ref(`marks-app/${this.props.user.uid}/tests/${mark.val().testId}`).update({ markId: null, markValue: null });
+    });
+    markRef.remove();
   }
 
 
