@@ -193,10 +193,10 @@ class App extends Component {
         : <SettingsContext.Provider value={settings}>
             <Grid columns={2} padded>
                 <Grid.Column width={2}>
-                  <MainMenu activeItem={activeItem} handleItemClick={this.handleMenuItemClick}/>
+                  <MainMenu user={user} activeItem={activeItem} handleItemClick={this.handleMenuItemClick}/>
                 </Grid.Column>
                 <Grid.Column width={14} style={{ padding: '0'}}>
-                  <Button onClick={() => auth.signOut()} >Sign Out</Button>
+                  {/* <Button onClick={() => auth.signOut()} >Sign Out</Button> */}
                   { activeItem === 'home' && <HomePage /> }
                   { activeItem === 'marks' && <Marks marks={marks} subjects={subjects} tests={tests}/> }
                   { activeItem === 'subjects' && <Subjects user={user} subjects={subjects} tests={tests}/> }

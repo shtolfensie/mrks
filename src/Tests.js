@@ -38,8 +38,8 @@ class Tests extends Component {
     this.getFilteredTests(this.doFilter);
     if (settings !== undefined && settings !== null && settings.tests !== undefined) {
       this.setState({
-        filterBy: settings.tests.filterBy,
-        groupBy: settings.tests.groupBy,
+        filterBy: settings.tests.filterBy ? settings.tests.filterBy : this.state.filterBy,
+        groupBy: settings.tests.groupBy ? settings.tests.groupBy : this.state.groupBy,
       });
     }
   }
@@ -54,20 +54,29 @@ class Tests extends Component {
       this.getFilteredTests(this.doFilter);
     }
 
+    // update filterBy setting on change in firebase
     if (!_.isEqual(prevState.filterBy, this.state.filterBy)) {
       db.ref(`marks-app/${this.props.user.uid}/settings/tests/filterBy`).update(this.state.filterBy);
     }
 
+    // update groupBy settings on change in firebase
     if (prevState.groupBy !== this.state.groupBy) {
       db.ref(`marks-app/${this.props.user.uid}/settings/tests`).update({groupBy: this.state.groupBy});
     }
 
+    // controll loader
     if (Object.keys(this.state.groupedTests).length !== 0 && this.state.loading) {
       this.setState({ loading: false });
     }
 
-    if (prevProps.settings !== this.props.settings && this.props.settings.tests.filterBy !== undefined && this.props.settings.tests.groupBy) {
-      this.setState({ filterBy: this.props.settings.tests.filterBy, groupBy: this.props.settings.tests.groupBy });      
+    // set settings from firebase if they exist
+    if (this.props.settings !== undefined && this.props.settings !== null) {
+      if (prevProps.settings !== this.props.settings && this.props.settings.tests.filterBy !== undefined) {
+        this.setState({ filterBy: this.props.settings.tests.filterBy });      
+      }
+      if (prevProps.settings !== this.props.settings && this.props.settings.tests.groupBy !== undefined) {
+        this.setState({ groupBy: this.props.settings.tests.groupBy });      
+      }
     }
   }
 

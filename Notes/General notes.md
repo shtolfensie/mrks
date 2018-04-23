@@ -15,6 +15,10 @@
 - ~~If user selects a test, then `subjectId` and `subjectInitials` should be taken from that tests properties.~~
 - ~~Only if user selects **No test**, should the dropdown select appear, and the `subjectId` and `subjectInitials` should be taken from it.~~
 
+### Main Menu
+- user accordeon is only temporary.
+- the arrow should be on the right side
+- the logout button doesnt look good
 
 ### Tests
 
