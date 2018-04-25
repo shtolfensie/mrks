@@ -9,7 +9,7 @@ import MainMenu from './MainMenu'
 import Subjects from './Subjects.js'
 import Marks from './Marks'
 import HomePage from './Home'
-// import Tests from './Tests'
+import Tests from './Tests'
 import Agenda from './Agenda'
 
 export const UserContext = React.createContext({ user: null });
@@ -19,9 +19,10 @@ const INITIAL_STATE = {
   // rename this you fuckhead
   activeItem: 'agenda',
   subjects: [],
-  tests: [],
-  marks: [],
+  tests: [false],
+  marks: [false],
   loadingTests: true,
+  loadingMarks: true,
   user: false,
 }
 
@@ -41,6 +42,9 @@ class App extends Component {
   componentDidUpdate(prevProps, prevState) {
     if ((prevState.tests !== this.state.tests) && this.state.user !== null) {
       this.setState({ loadingTests: false });
+    }
+    if ((prevState.marks !== this.state.marks) && this.state.user !== null) {
+      this.setState({ loadingMarks: false });
     }
 
     if ((prevState.user === null || prevState.user === false) && this.state.user) {
@@ -172,6 +176,7 @@ class App extends Component {
       tests,
       marks,
       loadingTests,
+      loadingMarks,
       user,
       settings,
     } = this.state;
@@ -198,10 +203,10 @@ class App extends Component {
                 <Grid.Column width={14} style={{ padding: '0'}}>
                   {/* <Button onClick={() => auth.signOut()} >Sign Out</Button> */}
                   { activeItem === 'home' && <HomePage /> }
-                  { activeItem === 'marks' && <Marks marks={marks} subjects={subjects} tests={tests}/> }
+                  { activeItem === 'marks' && <Marks loadingMarks={loadingMarks} marks={marks} subjects={subjects} tests={tests}/> }
                   { activeItem === 'subjects' && <Subjects user={user} subjects={subjects} tests={tests}/> }
-                  {/* { activeItem === 'tests' && <Tests loadingTests={loadingTests} subjects={subjects} tests={tests}/> } */}
-                  { activeItem === 'agenda' && <Agenda loadingTests={loadingTests} marks={marks} subjects={subjects} tests={tests}/> }
+                  { activeItem === 'tests' && <Tests settings={settings} user={user} loadingTests={loadingTests} subjects={subjects} tests={tests}/> }
+                  { activeItem === 'agenda' && <Agenda loadingMarks={loadingMarks} loadingTests={loadingTests} marks={marks} subjects={subjects} tests={tests}/> }
                 </Grid.Column>
               </Grid>
         </SettingsContext.Provider>

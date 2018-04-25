@@ -64,7 +64,8 @@ class TestAddForm extends Component {
         subjectId,
       }
   
-      db.ref(`marks-app/${user.uid}/tests`).push(test);
+      const testId = db.ref(`marks-app/${user.uid}/tests`).push(test).key;
+      db.ref(`marks-app/${user.uid}/subjects/${test.subjectId}/testIds`).push({ testId });
 
       this.handleClose();
     }
@@ -185,7 +186,7 @@ class TestAddForm extends Component {
             <p>Oh no. You have another? That sucks. Well...</p>
             <Form error={isError}>
               <Form.Group>
-                <Form.Input value={name} onChange={(e) => this.setState({ name: e.target.value })} label='Add a Name' placeholder='' />
+                <Form.Input autoFocus value={name} onChange={(e) => this.setState({ name: e.target.value })} label='Add a Name' placeholder='' />
                 {/* <Form.Input value={dueDate} onChange={(e) => this.setState({ dueDate: e.target.value })} label='Add a Due Date' /> */}
                 <DuedatePicker onOpenChange={this.handleOpenChage} value={dueDate} onChange={(e, { value }) => this.setState({ dueDate: value })} label='Add a Due Date' placeholder='Add a Due Date'/>
                 <Form.Dropdown disabled={fromSubjectCard && true} label='Choose a Subject' onChange={this.handleDropdown} value={subjectId} placeholder='Choose a Subject' search selection options={subjectOptions}/>

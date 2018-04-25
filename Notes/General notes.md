@@ -2,10 +2,10 @@
 
 ### Marks
 
-#### Marks array request
-- Might want to get all marks in the main app, right now they are requested in the `<Marks />` component.
-- like this, the app doesn't need to load them if they are not needed right away. At this time, that includes the `Home`, `Subjects`* and the `Tests` components.
-- if in the future the array is needed elswhere, it might be good to move the function to the `<App />` component.
+#### _DONE_ ~~Marks array request~~
+- ~~Might want to get all marks in the main app, right now they are requested in the `<Marks />` component.~~
+- ~~like this, the app doesn't need to load them if they are not needed right away. At this time, that includes the `Home`, `Subjects`* and the `Tests` components.~~
+- ~~if in the future the array is needed elswhere, it might be good to move the function to the `<App />` component.~~
 
 #### AddMarkForm
 - when selecting no test, after the third input appears, the first one shrinks a little bit. 
@@ -22,7 +22,6 @@
 
 ### Tests
 
-- show graded should be controled from tests component. But it is controlled in submenu.
 - use regexp for searching
 - finish subject filter
 - teacher field in subject is probably not required

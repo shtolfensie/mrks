@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { List, Grid, Segment, Header, Button, Confirm, } from 'semantic-ui-react'
+import { List, Grid, Segment, Header, Button, Confirm, Loader, } from 'semantic-ui-react'
 
 import { db } from './firebase'
 import * as DateUtils from './utils/DateUtils'
 
 import MarkAddForm from './MarkAddForm'
 import DeleteConfirmModal from './DeleteConfirmModal'
+import AgendaSubMenu from './AgendaSubMenu'
 
 class Marks extends Component {
   constructor(props) {
@@ -32,14 +33,20 @@ class Marks extends Component {
       subjects,
       tests,
       marks,
+      loadingMarks,
     } = this.props;
 
     return(
       <div>
+        <AgendaSubMenu handleSearchFilterChange={this.handleSearchFilterChange} showGraded={false} date={false} groupBy={false} handleRangeChange={this.handleRangeChange} handleGradedChange={this.handleGradedChange} handleGroupByChange={this.handleGroupByChange} subjects={subjects} />        
+        <Segment attached='bottom'>
         <MarkAddForm subjects={subjects} tests={tests}/>
+        <Loader active={loadingMarks}/>
+        { marks.length === 0  && <div style={{ textAlign: 'center' }}>Look's like you don't have any marks.</div>}
         <List divided>
-          {marks.length !== 0 && marks.map((mark, i) => <MarkItem key={i} handleDelete={this.handleDelete} mark={mark} markId={mark.key} subjectId={mark.subjectId} value={mark.value} subjectInitials={mark.subjectInitials} timestamp={mark.timestamp} />)}
+          {marks[0] !== false && marks.map((mark, i) => <MarkItem key={i} handleDelete={this.handleDelete} mark={mark} markId={mark.key} subjectId={mark.subjectId} value={mark.value} subjectInitials={mark.subjectInitials} timestamp={mark.timestamp} />)}
         </List>
+        </Segment>  
       </div>
     )
   }
@@ -62,10 +69,8 @@ const MarkItem = ({ handleDelete, mark }) =>
           <p>{ DateUtils.getFormatedDate(mark.timestamp) }</p>
           <p>{mark.testName}</p>
         </Grid.Column>   
-        <Grid.Column computer={2} tablet={3} floated='right' verticalAlign='middle'>
           {/* <Button floated='right' onClick={() => props.handleDelete(props.markId)} content='Delete' negative/> */}
-          <DeleteConfirmModal handleConfirm={() => handleDelete(mark.key)} />
-        </Grid.Column>             
+          <DeleteConfirmModal handleConfirm={() => handleDelete(mark.key)} />             
       </Grid.Row>              
     </Grid>
   </List.Item>

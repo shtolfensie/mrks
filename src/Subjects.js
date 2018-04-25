@@ -42,10 +42,18 @@ class Subjects extends Component {
   // }
 
   handleDelete = (id) => {
-    const subjectRef = db.ref(`/marks-app/${this.props.user.uid}/subjects/${id}`);
-    subjectRef.once('value', subject => {
-      db.ref(`marks-app/${this.props.user.uid}/`)
-    })
+    const subjectRefPath = `/marks-app/${this.props.user.uid}/subjects/${id}`;
+    db.ref(`${subjectRefPath}/testIds`).once('value', testIdKeyArr => {
+      testIdKeyArr.forEach(testIdKey => {
+        db.ref(`marks-app/${this.props.user.uid}/tests/${testIdKey.val().testId}`).remove();
+      });
+    });
+    db.ref(`${subjectRefPath}/markIds`).once('value', markIdKeyArr => {
+      markIdKeyArr.forEach(markIdKey => {
+        db.ref(`marks-app/${this.props.user.uid}/marks/${markIdKey.val().markId}`).remove();
+      })
+    });
+    db.ref(subjectRefPath).remove();
   }
 
   render() {

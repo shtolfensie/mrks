@@ -61,9 +61,9 @@ class MainMenu extends Component {
           <Menu.Item name='subjects' style={this.styles.mainMenuButtons} active={activeItem === 'subjects'} onClick={handleItemClick}>
             Subjects
           </Menu.Item>
-          {/* <Menu.Item name='tests' style={this.styles.mainMenuButtons} active={activeItem === 'tests'} onClick={handleItemClick}>
+          <Menu.Item name='tests' style={this.styles.mainMenuButtons} active={activeItem === 'tests'} onClick={handleItemClick}>
             Tests
-          </Menu.Item> */}
+          </Menu.Item>
           <Menu.Item name='agenda' style={this.styles.mainMenuButtons} active={activeItem === 'agenda'} onClick={handleItemClick}>
             Agenda
           </Menu.Item>

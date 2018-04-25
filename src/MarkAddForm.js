@@ -68,6 +68,7 @@ class MarkAddForm extends Component {
   
       var markId = db.ref(`marks-app/${user.uid}/marks`).push(mark).key;
       if (testId !== 'notest') db.ref(`marks-app/${user.uid}/tests/${mark.testId}`).update({ markValue: parseFloat(value), markId });
+      db.ref(`marks-app/${user.uid}/subjects/${mark.subjectId}/markIds`).push({ markId });
 
       this.handleClose();
     }
@@ -152,7 +153,9 @@ class MarkAddForm extends Component {
       tests,
     } = this.props;
 
-    let testOptions = [{ key: 0, text: 'No test', value: 'notest', }];
+    let testOptions = [];
+
+    if (!this.props.fromTest) testOptions = [{ key: 0, text: 'No test', value: 'notest', }];
 
     console.log(tests);
     
@@ -171,6 +174,7 @@ class MarkAddForm extends Component {
     }
 
     this.setState({ testOptions });
+    if (this.props.fromTest) this.setState({ testId: tests[0].key });
   }
 
 
@@ -227,7 +231,7 @@ class MarkAddForm extends Component {
           <p>Hello! Do you want to add some maks? Yeah. Me neither. But...</p>
           <Form error={isError} >
             <Form.Group>
-              <Form.Input value={value} onChange={(e) => this.setState({ value: e.target.value })} label='Add a Grade' placeholder='1-5' width={3}/>
+              <Form.Input autoFocus value={value} onChange={(e) => this.setState({ value: e.target.value })} label='Add a Grade' placeholder='1-5' width={3}/>
               <Form.Dropdown label='Choose a Test' onChange={this.handleTestDropdown} value={testId} placeholder='Choose a Test' search selection options={testOptions}/>              
               { testId === 'notest' && <Form.Dropdown disabled={fromSubjectCard && true} label='Choose a Subject' onChange={this.handleSubjectDropdown} value={subjectId} placeholder='Choose a Subject' search selection options={subjectOptions}/> }
             </Form.Group>

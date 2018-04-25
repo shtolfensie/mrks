@@ -10,6 +10,7 @@ import * as DateUtils from './utils/DateUtils'
 import TestAddForm from './TestAddForm'
 import DeleteConfirmModal from './DeleteConfirmModal'
 import AgendaSubMenu from './AgendaSubMenu'
+import MarkAddForm from './MarkAddForm'
 
 import { UserContext } from './App'
 import { SettingsContext } from './App'
@@ -167,22 +168,22 @@ class Tests extends Component {
         <AgendaSubMenu handleSearchFilterChange={this.handleSearchFilterChange} showGraded={showGraded} date={date} groupBy={groupBy} handleRangeChange={this.handleRangeChange} handleGradedChange={this.handleGradedChange} handleGroupByChange={this.handleGroupByChange} subjects={subjects} />
         <Segment attached='bottom'>
         <Loader active={loadingTests}/>
-          {/* { fromAgenda !== true && <AgendaSubMenu subjects={subjects} /> } */}
-          <List divided relaxed>
+        { tests.length === 0 && <div style={{ textAlign: 'center' }}>Look's like you don't have any tests.</div>}
+        <List divided relaxed>
           { groupedTests && Object.keys(groupedTests).map((testGroup, i) => {
             return (
               <List.Item key={i}>
                 {/* { groupBy === 'dueDate' && <Header size='small' color='red' >{ new Date(Number(testGroup)).toDateString() }</Header> } */}
                 { groupBy === 'dueDate' && <Header size='small' color='red' >{ DateUtils.getDayDelta(testGroup) }</Header> }                
                 { groupBy === 'subjectInitials' && <Header size='small' color='red' >{ testGroup }</Header> }
-                
-                <List  size='large' relaxed>
-                  { tests.length !== 0 && groupedTests[testGroup].map((test, i) => <TestItem key={i} i={i} test={test} handleDelete={this.handleDelete} />) }
+
+                <List  size='large'>
+                  { tests[0] !== false && groupedTests[testGroup].map((test, i) => <TestItem subjects={subjects} key={i} i={i} test={test} handleDelete={this.handleDelete} />) }
                 </List>
               </List.Item>
             )
           }) }
-          </List>
+        </List>
         </Segment>
 
       </div>
@@ -195,7 +196,7 @@ class Tests extends Component {
 </List> */}
 
 
-const TestItem = ({ test, i, handleDelete }) =>
+const TestItem = ({ test, i, handleDelete, subjects }) =>
   <List.Item key={i} >
     <List.Content floated='left'>
       <List.Header content={test.name}/>
@@ -205,6 +206,7 @@ const TestItem = ({ test, i, handleDelete }) =>
       { test.markValue !== undefined && <div>Mark: {test.markValue}</div> }        
     </List.Content>
     <List.Content floated='right'>
+      <MarkAddForm subjects={subjects} tests={[test]} fromTest />
       <DeleteConfirmModal handleConfirm={() => handleDelete(test.key)} />
     </List.Content>
   </List.Item>
