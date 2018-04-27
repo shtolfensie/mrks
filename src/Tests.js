@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { List, Header, Segment, Loader, Input, } from 'semantic-ui-react'
+import { List, Header, Segment, Loader, Input, Icon, } from 'semantic-ui-react'
 
 import { db } from './firebase'
 
@@ -8,12 +8,14 @@ import _ from 'lodash'
 import * as DateUtils from './utils/DateUtils'
 
 import TestAddForm from './TestAddForm'
+import TestEditForm from './TestEditForm'
 import DeleteConfirmModal from './DeleteConfirmModal'
 import AgendaSubMenu from './AgendaSubMenu'
 import MarkAddForm from './MarkAddForm'
 
 import { UserContext } from './App'
 import { SettingsContext } from './App'
+import DeleteButton from './DeleteButton';
 
 
 class Tests extends Component {
@@ -81,8 +83,9 @@ class Tests extends Component {
     }
   }
 
-  handleDelete = (id) => {
-    db.ref(`marks-app/${this.props.user.uid}/tests/${id}`).remove();
+  handleDelete = (test) => {
+    db.ref(`marks-app/${this.props.user.uid}/tests/${test.key}`).remove();
+    db.ref(`marks-app/${this.props.user.uid}/marks/${test.markId}`).remove();
   }
 
   getFilteredTests = (doFilter) => {
@@ -206,8 +209,9 @@ const TestItem = ({ test, i, handleDelete, subjects }) =>
       { test.markValue !== undefined && <div>Mark: {test.markValue}</div> }        
     </List.Content>
     <List.Content floated='right'>
-      <MarkAddForm subjects={subjects} tests={[test]} fromTest />
-      <DeleteConfirmModal handleConfirm={() => handleDelete(test.key)} />
+      <MarkAddForm subjects={subjects} tests={[test]} fromTest> <Icon link name='checkmark' /> </MarkAddForm>
+      <TestEditForm subjects={subjects} test={test} > <Icon link name='edit' /> </TestEditForm>
+      <DeleteConfirmModal handleConfirm={() => handleDelete(test)} > <Icon link name='trash outline' /> </DeleteConfirmModal>
     </List.Content>
   </List.Item>
 

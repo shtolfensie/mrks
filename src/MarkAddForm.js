@@ -216,10 +216,7 @@ class MarkAddForm extends Component {
       <UserContext.Consumer>
       {user => (
       <Modal
-        trigger={<Button basic color='blue' animated='fade' onClick={this.handleOpen}>
-                  <Button.Content visible>Add a Mark</Button.Content>
-                  <Button.Content hidden><Icon name='plus'/></Button.Content>
-                </Button>}
+        trigger={<div onClick={this.handleOpen} >{this.props.children}</div>}
         open={open}
         onClose={this.handleClose}
         dimmer={false}

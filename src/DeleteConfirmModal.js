@@ -20,6 +20,8 @@ class DeleteConfirmModal extends Component {
       open
     } = this.state;
 
+    const Delete = this.props.children;
+
     return (
       // <div>
       //   {/* <Button negative onClick={this.show}>{this.props.buttonContent}</Button> */}
@@ -32,7 +34,7 @@ class DeleteConfirmModal extends Component {
       //     onConfirm={this.handleConfirm}
       //   />
       // </div>
-        <Modal size='tiny' open={open} onClose={this.handleClose} trigger={ <DeleteButton onClick={this.show} /> }>
+        <Modal size='tiny' open={open} onClose={this.handleClose} trigger={ <span onClick={this.show}>{Delete}</span> }>
           <Modal.Header>
             Are you sure?
           </Modal.Header>

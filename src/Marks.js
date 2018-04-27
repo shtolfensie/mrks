@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { List, Grid, Segment, Header, Button, Confirm, Loader, } from 'semantic-ui-react'
+import { List, Grid, Segment, Header, Button, Confirm, Loader, Icon, } from 'semantic-ui-react'
 
 import { db } from './firebase'
 import * as DateUtils from './utils/DateUtils'
@@ -17,12 +17,13 @@ class Marks extends Component {
     }
   }
 
-  handleDelete = (id) => {
-    const markRef = db.ref(`marks-app/${this.props.user.uid}/marks/${id}`);
-    markRef.once('value', mark => {
-      db.ref(`marks-app/${this.props.user.uid}/tests/${mark.val().testId}`).update({ markId: null, markValue: null });
-    });
+  handleDelete = (mark) => {
+    const markRef = db.ref(`marks-app/${this.props.user.uid}/marks/${mark.key}`);
+    // markRef.once('value', mark => {
+    //   db.ref(`marks-app/${this.props.user.uid}/tests/${mark.val().testId}`).update({ markId: null, markValue: null });
+    // });
     markRef.remove();
+    db.ref(`marks-app/${this.props.user.uid}/tests/${mark.testId}`).update({ markId: null, markValue: null });
   }
 
 
@@ -40,7 +41,7 @@ class Marks extends Component {
       <div>
         <AgendaSubMenu handleSearchFilterChange={this.handleSearchFilterChange} showGraded={false} date={false} groupBy={false} handleRangeChange={this.handleRangeChange} handleGradedChange={this.handleGradedChange} handleGroupByChange={this.handleGroupByChange} subjects={subjects} />        
         <Segment attached='bottom'>
-        <MarkAddForm subjects={subjects} tests={tests}/>
+        <MarkAddForm subjects={subjects} tests={tests}> <Icon link name='plus' /> </MarkAddForm>
         <Loader active={loadingMarks}/>
         { marks.length === 0  && <div style={{ textAlign: 'center' }}>Look's like you don't have any marks.</div>}
         <List divided>
@@ -70,7 +71,7 @@ const MarkItem = ({ handleDelete, mark }) =>
           <p>{mark.testName}</p>
         </Grid.Column>   
           {/* <Button floated='right' onClick={() => props.handleDelete(props.markId)} content='Delete' negative/> */}
-          <DeleteConfirmModal handleConfirm={() => handleDelete(mark.key)} />             
+          <DeleteConfirmModal handleConfirm={() => handleDelete(mark)}> <Icon link name='trash outline' /> </DeleteConfirmModal>             
       </Grid.Row>              
     </Grid>
   </List.Item>

@@ -233,7 +233,7 @@ class SubjectCard extends Component {
               <MarkAddForm fromSubjectCard subjects={ [{ name, key, initials, teacher }] } tests={subjectTests} />
             </Menu.Item>
             <Menu.Item>
-              <DeleteConfirmModal handleConfirm={() => handleDelete(key)} />
+              <DeleteConfirmModal handleConfirm={() => handleDelete(key)}> <Icon link nake='trash outline' /> </DeleteConfirmModal>
             </Menu.Item>
           </Menu>
         </Card>

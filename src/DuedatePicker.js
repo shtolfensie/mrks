@@ -40,6 +40,17 @@ class DuedatePicker extends Component {
     },
   ];
 
+  componentDidMount() {
+    if (this.props.fromEdit) {
+      this.options.push({
+        key: this.options.length + 1,
+        text: DateUtils.getFormatedDate(this.props.value),
+        value: this.props.value,
+      });
+      this.props.onChange(1, { value: this.props.value });
+    }
+  }
+
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.value !== this.props.value) {
       this.checkIfOpen();
