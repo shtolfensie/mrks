@@ -21,6 +21,7 @@ const INITIAL_STATE = {
   subjects: [],
   tests: [false],
   marks: [false],
+  subjects: [false],
   loadingTests: true,
   loadingMarks: true,
   user: false,
@@ -79,6 +80,8 @@ class App extends Component {
           name: data.val().name,
           initials: data.val().initials,
           teacher: data.val().teacher,
+          testIds: data.val().testIds,
+          markIds: data.val().markIds,
           key: data.key,
         });
         // console.log(data.val().name);

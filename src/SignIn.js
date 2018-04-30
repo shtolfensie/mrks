@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { Button, Grid, } from 'semantic-ui-react'
+import { Button, Grid, Header, } from 'semantic-ui-react'
 
 import { auth, providerGoogle } from './firebase'
 
@@ -33,7 +33,7 @@ const SignInButton = (props) => {
   return (
     <Grid textAlign='center' verticalAlign='middle' style={{ height: '100vh' }}>
       <Grid.Column>
-        <div>Hi there, please log in.</div>
+        <Header>Hi there, please sign in.</Header>
         <Button onClick={handleGoogleSignIn} >
           Sign In
         </Button>

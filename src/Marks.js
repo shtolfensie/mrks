@@ -18,12 +18,23 @@ class Marks extends Component {
   }
 
   handleDelete = (mark) => {
-    const markRef = db.ref(`marks-app/${this.props.user.uid}/marks/${mark.key}`);
+    const {
+      user,
+      subjects,
+    } = this.props;
+    const markRef = db.ref(`marks-app/${user.uid}/marks/${mark.key}`);
     // markRef.once('value', mark => {
     //   db.ref(`marks-app/${this.props.user.uid}/tests/${mark.val().testId}`).update({ markId: null, markValue: null });
     // });
     markRef.remove();
-    db.ref(`marks-app/${this.props.user.uid}/tests/${mark.testId}`).update({ markId: null, markValue: null });
+    db.ref(`marks-app/${user.uid}/tests/${mark.testId}`).update({ markId: null, markValue: null });
+    subjects.forEach(subject => {
+      if (mark.subjectId === subject.key) {
+        Object.keys(subject.markIds).forEach(markIdKey => {      
+          if (mark.key === subject.markIds[markIdKey].markId) db.ref(`marks-app/${user.uid}/subjects/${mark.subjectId}/markIds/${markIdKey}`).remove();
+        })
+      }
+    })
   }
 
 

@@ -3,6 +3,8 @@ import { db } from './firebase'
 
 import { Modal, Button, Icon, Form, Dropdown, Message, } from 'semantic-ui-react'
 
+import Mousetrap from 'mousetrap'
+
 import { UserContext } from './App'
 
 
@@ -23,6 +25,24 @@ class MarkAddForm extends Component {
 
     this.state = INITIAL_STATE;
   }
+
+  shortcuts = {
+    markAddOpen: ['m a r k']
+  }
+
+  componentDidMount() {
+    if (!this.props.fromTest && !this.props.fromSubjectCard) {
+      Mousetrap.bind(this.shortcuts.markAddOpen, () => {
+        this.handleOpen();
+      });
+    }
+  }
+
+  componentWillUnmount() {
+    if (!this.props.fromTest && !this.props.fromSubjectCard) {
+      Mousetrap.unbind(this.shortcuts.markAddOpen);
+    }
+  }
   
   handleOpen = ()  => {
     this.setState({ open: true });
@@ -34,6 +54,10 @@ class MarkAddForm extends Component {
     }
     else {
       this.constructSubjectsDropDownOptionsArray();
+       // reseting name -- needed if using sequence of keys to open
+       setTimeout(() => {
+        this.setState({value: ''});
+      }, 1);
     }
     this.constructTestsDropDownOptionsArray();
 
@@ -191,7 +215,8 @@ class MarkAddForm extends Component {
 
     const {
       fromSubjectCard,
-      subjects
+      subjects,
+      fromTest
     } = this.props;
 
     // const subjectOptions = [
@@ -229,9 +254,9 @@ class MarkAddForm extends Component {
           <Form error={isError} >
             <Form.Group>
               <Form.Input autoFocus value={value} onChange={(e) => this.setState({ value: e.target.value })} label='Add a Grade' placeholder='1-5' width={3}/>
-              <Form.Dropdown label='Choose a Test' onChange={this.handleTestDropdown} value={testId} placeholder='Choose a Test' search selection options={testOptions}/>              
-              { testId === 'notest' && <Form.Dropdown disabled={fromSubjectCard && true} label='Choose a Subject' onChange={this.handleSubjectDropdown} value={subjectId} placeholder='Choose a Subject' search selection options={subjectOptions}/> }
+              <Form.Dropdown label='Choose a Test' disabled={fromTest && true} onChange={this.handleTestDropdown} value={testId} placeholder='Choose a Test' search selection options={testOptions}/>              
             </Form.Group>
+              { testId === 'notest' && <Form.Dropdown width={6} disabled={fromSubjectCard && true} label='Choose a Subject' onChange={this.handleSubjectDropdown} value={subjectId} placeholder='Choose a Subject' search selection options={subjectOptions}/> }
             <Form.TextArea label='Description' />
             {/* <Form.Button onClick={this.handleAdd} positive>Add</Form.Button> */}
             <Message 

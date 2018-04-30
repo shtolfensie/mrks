@@ -84,8 +84,19 @@ class Tests extends Component {
   }
 
   handleDelete = (test) => {
-    db.ref(`marks-app/${this.props.user.uid}/tests/${test.key}`).remove();
-    db.ref(`marks-app/${this.props.user.uid}/marks/${test.markId}`).remove();
+    const {
+      user,
+      subjects,
+    } = this.props;
+    db.ref(`marks-app/${user.uid}/tests/${test.key}`).remove();
+    db.ref(`marks-app/${user.uid}/marks/${test.markId}`).remove();
+    subjects.forEach(subject => {
+      if (test.subjectId === subject.key) {
+        Object.keys(subject.testIds).forEach(testIdKey => {      
+          if (test.key === subject.testIds[testIdKey].testId) db.ref(`marks-app/${user.uid}/subjects/${test.subjectId}/testIds/${testIdKey}`).remove();
+        })
+      }
+    })
   }
 
   getFilteredTests = (doFilter) => {
@@ -172,7 +183,7 @@ class Tests extends Component {
         <Segment attached='bottom'>
         <Loader active={loadingTests}/>
         { tests.length === 0 && <div style={{ textAlign: 'center' }}>Look's like you don't have any tests.</div>}
-        <List divided relaxed>
+        <List >
           { groupedTests && Object.keys(groupedTests).map((testGroup, i) => {
             return (
               <List.Item key={i}>
@@ -180,7 +191,7 @@ class Tests extends Component {
                 { groupBy === 'dueDate' && <Header size='small' color='red' >{ DateUtils.getDayDelta(testGroup) }</Header> }                
                 { groupBy === 'subjectInitials' && <Header size='small' color='red' >{ testGroup }</Header> }
 
-                <List  size='large'>
+                <List divided relaxed size='large'>
                   { tests[0] !== false && groupedTests[testGroup].map((test, i) => <TestItem subjects={subjects} key={i} i={i} test={test} handleDelete={this.handleDelete} />) }
                 </List>
               </List.Item>
@@ -200,16 +211,17 @@ class Tests extends Component {
 
 
 const TestItem = ({ test, i, handleDelete, subjects }) =>
-  <List.Item key={i} >
+  <List.Item key={i}>
     <List.Content floated='left'>
-      <List.Header content={test.name}/>
-      <List.Description content={test.subjectInitials}/>
-      {/* {new Date(test.dueDate).toDateString()} */}
-      { DateUtils.getFormatedDate(test.dueDate) }
-      { test.markValue !== undefined && <div>Mark: {test.markValue}</div> }        
+      <Header size='small' content={test.name}/>
+      <div style={{marginLeft: '0.3rem', color: 'rgba(0, 0, 0, 0.7)'}}>
+        <div style={{fontSize: '1.2rem'}} >{test.subjectInitials}</div>
+        <div style={{fontSize: '1.2rem'}}>{ DateUtils.getFormatedDate(test.dueDate) }</div>
+        { test.markValue !== undefined && <div style={{fontSize: '1.2rem'}}>Mark: {test.markValue}</div> }        
+      </div>
     </List.Content>
     <List.Content floated='right'>
-      <MarkAddForm subjects={subjects} tests={[test]} fromTest> <Icon link name='checkmark' /> </MarkAddForm>
+      { !test.markValue ? <MarkAddForm subjects={subjects} tests={[test]} fromTest> <Icon link name='checkmark' /> </MarkAddForm> : <Icon name='checkmark' color='green'/> }
       <TestEditForm subjects={subjects} test={test} > <Icon link name='edit' /> </TestEditForm>
       <DeleteConfirmModal handleConfirm={() => handleDelete(test)} > <Icon link name='trash outline' /> </DeleteConfirmModal>
     </List.Content>

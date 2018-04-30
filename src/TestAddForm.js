@@ -5,6 +5,8 @@ import { Modal, Button, Icon, Form, Dropdown, Message, Menu, } from 'semantic-ui
 
 import * as DateUtils from './utils/DateUtils'
 
+import Mousetrap from 'mousetrap'
+
 import { UserContext } from './App'
 
 import DuedatePicker from './DuedatePicker'
@@ -25,17 +27,39 @@ class TestAddForm extends Component {
 
     this.state = INITIAL_STATE;
   }
+
+  shortcuts = {
+    testAddOpen: ['t e s t']
+  }
+
+  componentDidMount() {
+    Mousetrap.bind(this.shortcuts.testAddOpen, () => {
+      this.handleOpen();
+    });
+  }
+
+  componentWillUnmount() {
+    Mousetrap.unbind(this.shortcuts.testAddOpen);
+  }
   
   handleOpen = ()  => {
     this.setState({ open: true });
-    if (this.props.subjects.length === 0) {
+    if (this.props.subjects[0] === false) {
       // THIS IS NOT GOOD!! FIX THIS. MAKE IT RELOAD OR SMTHING. K? :)
       // NOT GOOOOOOOOOFING 'ROUND. REALLY, FIX THIS YOU LAZY DUMBASS
       // FIX THIIIIIIIIIIS
       this.handleClose();
     }
+    else if (this.props.subjects.length === 0) {
+      alert("Looks like you don't have any subjects yet. Please add at least one subject before adding any tests.");
+      this.handleClose();
+    }
     else {
       this.constructDropDownOptionsArray();
+      // reseting name -- needed if using sequence of keys to open
+      setTimeout(() => {
+        this.setState({name: ''});
+      }, 1);
     }
   }
 
@@ -186,7 +210,7 @@ class TestAddForm extends Component {
             <p>Oh no. You have another? That sucks. Well...</p>
             <Form error={isError}>
               <Form.Group>
-                <Form.Input autoFocus value={name} onChange={(e) => this.setState({ name: e.target.value })} label='Add a Name' placeholder='' />
+                <Form.Input autoFocus value={name} onChange={(e) => this.setState({ name: e.target.value })} label='Add a Name' placeholder='Add a name' />
                 {/* <Form.Input value={dueDate} onChange={(e) => this.setState({ dueDate: e.target.value })} label='Add a Due Date' /> */}
                 <DuedatePicker onOpenChange={this.handleOpenChage} value={dueDate} onChange={(e, { value }) => this.setState({ dueDate: value })} label='Add a Due Date' placeholder='Add a Due Date'/>
                 <Form.Dropdown disabled={fromSubjectCard && true} label='Choose a Subject' onChange={this.handleDropdown} value={subjectId} placeholder='Choose a Subject' search selection options={subjectOptions}/>

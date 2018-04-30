@@ -29,7 +29,7 @@ class TestEditForm extends Component {
   componentDidMount() {
     const { test } = this.props;
 
-    alert(2)
+    // alert(2)
     this.setState(test);
   }
   
@@ -51,7 +51,7 @@ class TestEditForm extends Component {
     this.setState(INITIAL_STATE);
   }
 
-  handleSave = (user, testId) => {
+  handleSave = (user) => {
 
     const {
       name,
@@ -73,7 +73,14 @@ class TestEditForm extends Component {
       }
   
       db.ref(`marks-app/${user.uid}/tests/${this.props.test.key}`).update(test);
-      db.ref(`marks-app/${user.uid}/subjects/${test.subjectId}/testIds`).push({ testId });      
+      if (subjectId !== this.props.test.subjectId) {
+        db.ref(`marks-app/${user.uid}/subjects/${subjectId}/testIds`).push({ testId: this.props.test.key });
+        db.ref(`marks-app/${user.uid}/subjects/${this.props.test.subjectId}/testIds`).once('value', testIdKeys => {
+          testIdKeys.forEach(testIdKey => {
+            if (this.props.test.key === testIdKey.val().testId) db.ref(`marks-app/${user.uid}/subjects/${this.props.test.subjectId}/testIds/${testIdKey.key}`).remove();
+          })
+        })
+      }
 
       this.handleClose();
     }
@@ -190,7 +197,7 @@ class TestEditForm extends Component {
           closeOnDocumentClick={onDocClick}
           style={{ zIndex: '999' }}
         >
-          <Modal.Header>Add Test</Modal.Header>
+          <Modal.Header>Edit Test</Modal.Header>
           <Modal.Content>
             <p>Oh no. You have another? That sucks. Well...</p>
             <Form error={isError}>
@@ -211,7 +218,7 @@ class TestEditForm extends Component {
           </Modal.Content>
           <Modal.Actions>
             <Button basic onClick={this.handleClose}>Cancel</Button>
-            <Button positive onClick={() => this.handleSave(user, )}>Save</Button> 
+            <Button positive onClick={() => this.handleSave(user)}>Save</Button> 
           </Modal.Actions>
         </Modal>
       )}

@@ -40,7 +40,7 @@ class SubjectAddForm extends Component {
       teacher,
     } = this.state
 
-    if (name === '' || initials === '' || teacher === '') {
+    if (name === '' || initials === '') {
       this.setState({ isError: true });
     }
     else {
@@ -89,14 +89,14 @@ class SubjectAddForm extends Component {
             <p>Hi there! Let's add some subjects, shall we?</p>
             <Form error={isError} onSubmit={this.handleAdd}>
               <Form.Group widths='equal'>
-                <Form.Input value={name} onChange={(e) => this.setState({ name: e.target.value })} fluid label='Subject Name' placeholder='eg. Maths, Biology, ...'/>
+                <Form.Input autoFocus value={name} onChange={(e) => this.setState({ name: e.target.value })} fluid label='Subject Name' placeholder='eg. Maths, Biology, ...'/>
                 <Form.Input value={initials} onChange={(e) => this.setState({ initials: e.target.value })} fluid label='Subject Initials' placeholder='eg. M, Ma, Bi, Fy, ...'/>
                 <Form.Input value={teacher} onChange={(e) => this.setState({ teacher: e.target.value })} fluid label='Teacher' placeholder='eg. Smith, Doe, ...'/>
               </Form.Group>
               <Message 
                 error
-                header='All fields are required'
-                content='Please fill in all fields of the form.'
+                header='Something is missing'
+                content="Please fill in 'Subject name' and 'Subject Initials'."
               />
             </Form>
           </Modal.Content>

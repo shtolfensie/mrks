@@ -92,6 +92,7 @@ class SubjectCard extends Component {
       subjectDisplayAverage: 0,
       isProgressError: false,
       subjectTests: [],
+      marksRef: null,
     }
   }
 
@@ -116,6 +117,7 @@ class SubjectCard extends Component {
   }
 
   componentWillUnmount() {
+    db.ref(`marks-app/${this.props.user.uid}/marks`).off();
     this.setState({ subjectMarks: [] })
   }
 
@@ -209,7 +211,7 @@ class SubjectCard extends Component {
             <Card.Header>{name}</Card.Header>
             <Card.Meta>
               {initials}
-              <div>Teacher: {teacher}</div>
+              { teacher.length !== 0 && <div>Teacher: {teacher}</div> }
             </Card.Meta>
             <Card.Description>
               <div>I dont like this subject.</div>
@@ -229,11 +231,11 @@ class SubjectCard extends Component {
           </Card.Content> */}
           <Menu attached='bottom'>
             <TestAddForm fromSubjectCard subjects={ [{ name, key, initials, teacher }] }/>
-            <Menu.Item>
-              <MarkAddForm fromSubjectCard subjects={ [{ name, key, initials, teacher }] } tests={subjectTests} />
+            <Menu.Item as={'a'}>
+              <MarkAddForm fromSubjectCard subjects={ [{ name, key, initials, teacher }] } tests={subjectTests}> <Icon name='checkmark' /> </MarkAddForm>
             </Menu.Item>
-            <Menu.Item>
-              <DeleteConfirmModal handleConfirm={() => handleDelete(key)}> <Icon link nake='trash outline' /> </DeleteConfirmModal>
+            <Menu.Item as={'a'}>
+              <DeleteConfirmModal handleConfirm={() => handleDelete(key)}> <Icon name='trash outline' /> </DeleteConfirmModal>
             </Menu.Item>
           </Menu>
         </Card>
