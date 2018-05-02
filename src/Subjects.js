@@ -41,8 +41,19 @@ class Subjects extends Component {
   //   })
   // }
 
-  deleteSubject = (id) => {
-    db.ref(`/marks-app/subjects/${id}`).remove();
+  handleDelete = (id) => {
+    const subjectRefPath = `/marks-app/${this.props.user.uid}/subjects/${id}`;
+    db.ref(`${subjectRefPath}/testIds`).once('value', testIdKeyArr => {
+      testIdKeyArr.forEach(testIdKey => {
+        db.ref(`marks-app/${this.props.user.uid}/tests/${testIdKey.val().testId}`).remove();
+      });
+    });
+    db.ref(`${subjectRefPath}/markIds`).once('value', markIdKeyArr => {
+      markIdKeyArr.forEach(markIdKey => {
+        db.ref(`marks-app/${this.props.user.uid}/marks/${markIdKey.val().markId}`).remove();
+      })
+    });
+    db.ref(subjectRefPath).remove();
   }
 
   render() {
@@ -50,13 +61,21 @@ class Subjects extends Component {
     const {
       subjects,
       tests,
+      user,
     } = this.props;
 
     return (
       <div>
         <SubjectAddForm />
         <Grid doubling padded columns={3}>
-          {subjects.length !== 0 && subjects.map((subject, i) => <Grid.Column style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center'}} key={i}><SubjectCard handleDelete={this.deleteSubject} tests={tests} subject={subject}/></Grid.Column>)}
+          {subjects.length !== 0 && subjects.map((subject, i) => (
+            <Grid.Column
+              style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center'}}
+              key={i}
+              >
+                <SubjectCard handleDelete={this.handleDelete} user={user} tests={tests} subject={subject}/>
+              </Grid.Column>
+            ))}
         </Grid>
       </div>
     )
@@ -73,6 +92,7 @@ class SubjectCard extends Component {
       subjectDisplayAverage: 0,
       isProgressError: false,
       subjectTests: [],
+      marksRef: null,
     }
   }
 
@@ -97,13 +117,17 @@ class SubjectCard extends Component {
   }
 
   componentWillUnmount() {
+    db.ref(`marks-app/${this.props.user.uid}/marks`).orderByChild('subjectId').equalTo(this.props.subject.key).off();
     this.setState({ subjectMarks: [] })
   }
 
   getAllSubjectMarks = () => {
-    const { subject } = this.props;
+    const {
+      subject,
+      user,
+    } = this.props;
     let subjectMarksArr = [];
-    db.ref('marks-app/marks').orderByChild('subjectId').equalTo(subject.key).on('value', snapshot => {
+    db.ref(`marks-app/${user.uid}/marks`).orderByChild('subjectId').equalTo(subject.key).on('value', snapshot => {
       // console.log(snapshot.val().subjectInitials);
       console.log('getAllSubjectMarks');
       snapshot.forEach(mark => {
@@ -187,7 +211,7 @@ class SubjectCard extends Component {
             <Card.Header>{name}</Card.Header>
             <Card.Meta>
               {initials}
-              <div>Teacher: {teacher}</div>
+              { teacher.length !== 0 && <div>Teacher: {teacher}</div> }
             </Card.Meta>
             <Card.Description>
               <div>I dont like this subject.</div>
@@ -207,11 +231,11 @@ class SubjectCard extends Component {
           </Card.Content> */}
           <Menu attached='bottom'>
             <TestAddForm fromSubjectCard subjects={ [{ name, key, initials, teacher }] }/>
-            <Menu.Item>
-              <MarkAddForm fromSubjectCard subjects={ [{ name, key, initials, teacher }] } tests={subjectTests} />
+            <Menu.Item as={'a'}>
+              <MarkAddForm fromSubjectCard subjects={ [{ name, key, initials, teacher }] } tests={subjectTests}> <Icon name='checkmark' /> </MarkAddForm>
             </Menu.Item>
-            <Menu.Item>
-              <DeleteConfirmModal handleConfirm={() => handleDelete(key)} />
+            <Menu.Item as={'a'}>
+              <DeleteConfirmModal handleConfirm={() => handleDelete(key)}> <Icon name='trash outline' /> </DeleteConfirmModal>
             </Menu.Item>
           </Menu>
         </Card>

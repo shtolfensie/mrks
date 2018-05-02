@@ -3,6 +3,10 @@ import { db } from './firebase'
 
 import { Modal, Button, Icon, Form, Dropdown, Message, } from 'semantic-ui-react'
 
+import Mousetrap from 'mousetrap'
+
+import { UserContext } from './App'
+
 
 const INITIAL_STATE = {
   open: false,
@@ -21,6 +25,24 @@ class MarkAddForm extends Component {
 
     this.state = INITIAL_STATE;
   }
+
+  shortcuts = {
+    markAddOpen: ['m a r k']
+  }
+
+  componentDidMount() {
+    if (!this.props.fromTest && !this.props.fromSubjectCard) {
+      Mousetrap.bind(this.shortcuts.markAddOpen, () => {
+        this.handleOpen();
+      });
+    }
+  }
+
+  componentWillUnmount() {
+    if (!this.props.fromTest && !this.props.fromSubjectCard) {
+      Mousetrap.unbind(this.shortcuts.markAddOpen);
+    }
+  }
   
   handleOpen = ()  => {
     this.setState({ open: true });
@@ -32,6 +54,10 @@ class MarkAddForm extends Component {
     }
     else {
       this.constructSubjectsDropDownOptionsArray();
+       // reseting name -- needed if using sequence of keys to open
+       setTimeout(() => {
+        this.setState({value: ''});
+      }, 1);
     }
     this.constructTestsDropDownOptionsArray();
 
@@ -41,9 +67,7 @@ class MarkAddForm extends Component {
     this.setState(INITIAL_STATE);
   }
 
-  handleAdd = (e) => {
-    e.preventDefault();
-
+  handleAdd = (user) => {
     const {
       value,
       timestamp,
@@ -66,8 +90,9 @@ class MarkAddForm extends Component {
         testName: this.getTestName(testId),
       }
   
-      var markId = db.ref('marks-app/marks').push(mark).key;
-      if (testId !== 'notest') db.ref(`marks-app/tests/${mark.testId}`).update({ markValue: parseFloat(value), markId });
+      var markId = db.ref(`marks-app/${user.uid}/marks`).push(mark).key;
+      if (testId !== 'notest') db.ref(`marks-app/${user.uid}/tests/${mark.testId}`).update({ markValue: parseFloat(value), markId });
+      db.ref(`marks-app/${user.uid}/subjects/${mark.subjectId}/markIds`).push({ markId });
 
       this.handleClose();
     }
@@ -152,7 +177,9 @@ class MarkAddForm extends Component {
       tests,
     } = this.props;
 
-    let testOptions = [{ key: 0, text: 'No test', value: 'notest', }];
+    let testOptions = [];
+
+    if (!this.props.fromTest) testOptions = [{ key: 0, text: 'No test', value: 'notest', }];
 
     console.log(tests);
     
@@ -171,6 +198,7 @@ class MarkAddForm extends Component {
     }
 
     this.setState({ testOptions });
+    if (this.props.fromTest) this.setState({ testId: tests[0].key });
   }
 
 
@@ -187,7 +215,8 @@ class MarkAddForm extends Component {
 
     const {
       fromSubjectCard,
-      subjects
+      subjects,
+      fromTest
     } = this.props;
 
     // const subjectOptions = [
@@ -209,11 +238,10 @@ class MarkAddForm extends Component {
     // ]
 
     return (
+      <UserContext.Consumer>
+      {user => (
       <Modal
-        trigger={<Button basic color='blue' animated='fade' onClick={this.handleOpen}>
-                  <Button.Content visible>Add a Mark</Button.Content>
-                  <Button.Content hidden><Icon name='plus'/></Button.Content>
-                </Button>}
+        trigger={<div onClick={this.handleOpen} >{this.props.children}</div>}
         open={open}
         onClose={this.handleClose}
         dimmer={false}
@@ -223,12 +251,12 @@ class MarkAddForm extends Component {
         <Modal.Header>Add a Mark</Modal.Header>
         <Modal.Content>
           <p>Hello! Do you want to add some maks? Yeah. Me neither. But...</p>
-          <Form error={isError} onSubmit={(e) => this.handleAdd(e)} >
+          <Form error={isError} >
             <Form.Group>
-              <Form.Input value={value} onChange={(e) => this.setState({ value: e.target.value })} label='Add a Grade' placeholder='1-5' width={3}/>
-              <Form.Dropdown label='Choose a Test' onChange={this.handleTestDropdown} value={testId} placeholder='Choose a Test' search selection options={testOptions}/>              
-              { testId === 'notest' && <Form.Dropdown disabled={fromSubjectCard && true} label='Choose a Subject' onChange={this.handleSubjectDropdown} value={subjectId} placeholder='Choose a Subject' search selection options={subjectOptions}/> }
+              <Form.Input autoFocus value={value} onChange={(e) => this.setState({ value: e.target.value })} label='Add a Grade' placeholder='1-5' width={3}/>
+              <Form.Dropdown label='Choose a Test' disabled={fromTest && true} onChange={this.handleTestDropdown} value={testId} placeholder='Choose a Test' search selection options={testOptions}/>              
             </Form.Group>
+              { testId === 'notest' && <Form.Dropdown width={6} disabled={fromSubjectCard && true} label='Choose a Subject' onChange={this.handleSubjectDropdown} value={subjectId} placeholder='Choose a Subject' search selection options={subjectOptions}/> }
             <Form.TextArea label='Description' />
             {/* <Form.Button onClick={this.handleAdd} positive>Add</Form.Button> */}
             <Message 
@@ -240,9 +268,12 @@ class MarkAddForm extends Component {
         </Modal.Content>
         <Modal.Actions>
           <Button basic onClick={this.handleClose}>Cancel</Button>
-          <Button positive onClick={this.handleAdd}>Add</Button>
+          {/* User object from context */}
+          <Button positive onClick={() => this.handleAdd(user)}>Add</Button> 
         </Modal.Actions>
       </Modal>
+      )}
+      </UserContext.Consumer>
     );
   }
 }

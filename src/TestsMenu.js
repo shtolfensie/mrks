@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 
-import { Checkbox, Menu, Dropdown, Icon, } from 'semantic-ui-react'
+import { Checkbox, Menu, Dropdown, Icon, Input, } from 'semantic-ui-react'
 
 import TestAddForm from './TestAddForm'
 
-class AgendaSubMenu extends Component {
+class TestsMenu extends Component {
 
   handleGroupByChange = (groupBy) => {
     this.props.handleGroupByChange(groupBy);
@@ -27,7 +27,7 @@ class AgendaSubMenu extends Component {
     } = this.props;
 
     return (
-      <Menu attached='top'>
+      <Menu compact attached='top'>
         <Dropdown item icon='bars' simple>
           <Dropdown.Menu>
             <Dropdown.Item>
@@ -53,23 +53,17 @@ class AgendaSubMenu extends Component {
             <Dropdown.Item>
               <Checkbox checked={showGraded} onChange={this.props.handleGradedChange} label='Show graded' />
             </Dropdown.Item>
-            <TestAddForm subjects={subjects} />
+            <TestAddForm subjects={subjects}> <Menu.Item>Add a Test</Menu.Item> </TestAddForm>
           </Dropdown.Menu>
         </Dropdown>
         <TestAddForm subjects={subjects} />
-        <Menu.Menu position='right'>
-          <div className='ui right aligned category search item'>
-            <div className='ui transparent icon input'>
-              <input onChange={handleSearchFilterChange} className='prompt' type='text' placeholder='Search tests...' />
-              <i className='search link icon' />
-            </div>
-            <div className='results' />
-          </div>
-        </Menu.Menu>
+        <Menu.Item position='right' >
+          <Input style={{width: '9rem'}} icon='search' transparent placeholder='Search tests...' onChange={handleSearchFilterChange} />
+        </Menu.Item>
       </Menu>
     )
   }
 }
 
 
-export default AgendaSubMenu;
+export default TestsMenu;

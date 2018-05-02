@@ -1,0 +1,19 @@
+{
+  "rules": {
+    "marks-app": {
+      "$uid": {
+        "subjects": {
+          ".indexOn": ["name"]
+        },
+        "tests": {
+          ".indexOn": ["dueDate"]
+        },
+        "marks": {
+          ".indexOn": ["subjectId"]
+        }
+      }
+    },
+    ".read": "auth.uid !== null",
+    ".write": "auth.uid !== null"
+  }
+}

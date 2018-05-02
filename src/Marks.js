@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { List, Grid, Segment, Header, Button, Confirm, } from 'semantic-ui-react'
+import { List, Grid, Segment, Header, Button, Confirm, Loader, Icon, } from 'semantic-ui-react'
 
 import { db } from './firebase'
 import * as DateUtils from './utils/DateUtils'
@@ -16,33 +16,24 @@ class Marks extends Component {
     }
   }
 
-  componentWillMount() {
-    this.getAllMarks();
-    console.log('hi');
-    
-  }
-
-  getAllMarks = () => {
-    let marksArr = [];
-    db.ref('/marks-app/marks').orderByKey().on('value', snapshot => {
-      snapshot.forEach(mark => {
-        marksArr.push({
-          value: mark.val().value,
-          subjectId: mark.val().subjectId,
-          subjectInitials: mark.val().subjectInitials,
-          timestamp: mark.val().timestamp,
-          key: mark.key,
-          testId: mark.val().testId,
-          testName: mark.val().testName,
-        }); 
-      });
-      this.setState({ marks: marksArr });
-      marksArr = [];
-    });
-  }
-
-  handleDelete = (id) => {
-    db.ref(`marks-app/marks/${id}`).remove();
+  handleDelete = (mark) => {
+    const {
+      user,
+      subjects,
+    } = this.props;
+    const markRef = db.ref(`marks-app/${user.uid}/marks/${mark.key}`);
+    // markRef.once('value', mark => {
+    //   db.ref(`marks-app/${this.props.user.uid}/tests/${mark.val().testId}`).update({ markId: null, markValue: null });
+    // });
+    markRef.remove();
+    db.ref(`marks-app/${user.uid}/tests/${mark.testId}`).update({ markId: null, markValue: null });
+    subjects.forEach(subject => {
+      if (mark.subjectId === subject.key) {
+        Object.keys(subject.markIds).forEach(markIdKey => {      
+          if (mark.key === subject.markIds[markIdKey].markId) db.ref(`marks-app/${user.uid}/subjects/${mark.subjectId}/markIds/${markIdKey}`).remove();
+        })
+      }
+    })
   }
 
 
@@ -50,20 +41,23 @@ class Marks extends Component {
   render() {
 
     const {
-      marks
-    } = this.state;
-
-    const {
       subjects,
       tests,
+      marks,
+      loadingMarks,
     } = this.props;
 
     return(
       <div>
-        <MarkAddForm subjects={subjects} tests={tests}/>
+        {/* <AgendaSubMenu handleSearchFilterChange={this.handleSearchFilterChange} showGraded={false} date={false} groupBy={false} handleRangeChange={this.handleRangeChange} handleGradedChange={this.handleGradedChange} handleGroupByChange={this.handleGroupByChange} subjects={subjects} />         */}
+        <Segment attached='bottom'>
+        <MarkAddForm subjects={subjects} tests={tests}> <Icon link name='plus' /> </MarkAddForm>
+        <Loader active={loadingMarks}/>
+        { marks.length === 0  && <div style={{ textAlign: 'center' }}>Look's like you don't have any marks.</div>}
         <List divided>
-          {marks.length !== 0 && marks.map((mark, i) => <MarkItem key={i} handleDelete={this.handleDelete} mark={mark} markId={mark.key} subjectId={mark.subjectId} value={mark.value} subjectInitials={mark.subjectInitials} timestamp={mark.timestamp} />)}
+          {marks[0] !== false && marks.map((mark, i) => <MarkItem key={i} handleDelete={this.handleDelete} mark={mark} markId={mark.key} subjectId={mark.subjectId} value={mark.value} subjectInitials={mark.subjectInitials} timestamp={mark.timestamp} />)}
         </List>
+        </Segment>  
       </div>
     )
   }
@@ -75,7 +69,7 @@ const MarkItem = ({ handleDelete, mark }) =>
   <List.Item>
     <Grid padded celled='internally' columns='equal' >
       <Grid.Row stretched columns={3}>
-        <Grid.Column textAlign='center' verticalAlign='middle' computer={3} tablet={2}>
+        <Grid.Column textAlign='center' verticalAlign='middle' computer={1} tablet={2}>
           <Segment textAlign='center' color='purple'>
             <Header content={mark.value} size='medium' />
           </Segment>
@@ -86,10 +80,8 @@ const MarkItem = ({ handleDelete, mark }) =>
           <p>{ DateUtils.getFormatedDate(mark.timestamp) }</p>
           <p>{mark.testName}</p>
         </Grid.Column>   
-        <Grid.Column computer={2} tablet={3} floated='right' verticalAlign='middle'>
           {/* <Button floated='right' onClick={() => props.handleDelete(props.markId)} content='Delete' negative/> */}
-          <DeleteConfirmModal handleConfirm={() => handleDelete(mark.key)} />
-        </Grid.Column>             
+          <DeleteConfirmModal handleConfirm={() => handleDelete(mark)}> <Icon link name='trash outline' /> </DeleteConfirmModal>             
       </Grid.Row>              
     </Grid>
   </List.Item>

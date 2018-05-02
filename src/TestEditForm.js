@@ -5,8 +5,6 @@ import { Modal, Button, Icon, Form, Dropdown, Message, Menu, } from 'semantic-ui
 
 import * as DateUtils from './utils/DateUtils'
 
-import Mousetrap from 'mousetrap'
-
 import { UserContext } from './App'
 
 import DuedatePicker from './DuedatePicker'
@@ -21,45 +19,31 @@ const INITIAL_STATE = {
   onDocClick: true,
 }
 
-class TestAddForm extends Component {
+class TestEditForm extends Component {
   constructor(props) {
     super(props);
 
     this.state = INITIAL_STATE;
   }
 
-  shortcuts = {
-    testAddOpen: ['t e s t']
-  }
-
   componentDidMount() {
-    Mousetrap.bind(this.shortcuts.testAddOpen, () => {
-      this.handleOpen();
-    });
-  }
+    const { test } = this.props;
 
-  componentWillUnmount() {
-    Mousetrap.unbind(this.shortcuts.testAddOpen);
+    // alert(2)
+    this.setState(test);
   }
   
   handleOpen = ()  => {
     this.setState({ open: true });
-    if (this.props.subjects[0] === false) {
+    this.setState(this.props.test);
+    if (this.props.subjects.length === 0) {
       // THIS IS NOT GOOD!! FIX THIS. MAKE IT RELOAD OR SMTHING. K? :)
       // NOT GOOOOOOOOOFING 'ROUND. REALLY, FIX THIS YOU LAZY DUMBASS
       // FIX THIIIIIIIIIIS
       this.handleClose();
     }
-    else if (this.props.subjects.length === 0) {
-      alert("Looks like you don't have any subjects yet. Please add at least one subject before adding any tests.");
-      this.handleClose();
-    }
     else {
       this.constructDropDownOptionsArray();
-      // reseting name -- needed if using sequence of keys to open
-      setTimeout(() => {
-        this.setState({name: ''});
-      }, 1);
     }
   }
 
@@ -67,7 +51,7 @@ class TestAddForm extends Component {
     this.setState(INITIAL_STATE);
   }
 
-  handleAdd = (user) => {
+  handleSave = (user) => {
 
     const {
       name,
@@ -88,8 +72,15 @@ class TestAddForm extends Component {
         subjectId,
       }
   
-      const testId = db.ref(`marks-app/${user.uid}/tests`).push(test).key;
-      db.ref(`marks-app/${user.uid}/subjects/${test.subjectId}/testIds`).push({ testId });
+      db.ref(`marks-app/${user.uid}/tests/${this.props.test.key}`).update(test);
+      if (subjectId !== this.props.test.subjectId) {
+        db.ref(`marks-app/${user.uid}/subjects/${subjectId}/testIds`).push({ testId: this.props.test.key });
+        db.ref(`marks-app/${user.uid}/subjects/${this.props.test.subjectId}/testIds`).once('value', testIdKeys => {
+          testIdKeys.forEach(testIdKey => {
+            if (this.props.test.key === testIdKey.val().testId) db.ref(`marks-app/${user.uid}/subjects/${this.props.test.subjectId}/testIds/${testIdKey.key}`).remove();
+          })
+        })
+      }
 
       this.handleClose();
     }
@@ -184,6 +175,7 @@ class TestAddForm extends Component {
     const {
       fromSubjectCard,
       subjects,
+      children
     } = this.props;
 
     // const subjectOptions = [
@@ -198,21 +190,21 @@ class TestAddForm extends Component {
       <UserContext.Consumer>
       { user => (
         <Modal
-          trigger={ <Menu.Item onClick={this.handleOpen}>Add a Test</Menu.Item> }
+          trigger={ <div onClick={this.handleOpen}>{children}</div> }
           open={open}
           onClose={this.handleClose}
           dimmer={false}
           closeOnDocumentClick={onDocClick}
           style={{ zIndex: '999' }}
         >
-          <Modal.Header>Add Test</Modal.Header>
+          <Modal.Header>Edit Test</Modal.Header>
           <Modal.Content>
             <p>Oh no. You have another? That sucks. Well...</p>
             <Form error={isError}>
               <Form.Group>
-                <Form.Input autoFocus value={name} onChange={(e) => this.setState({ name: e.target.value })} label='Add a Name' placeholder='Add a name' />
+                <Form.Input autoFocus value={name} onChange={(e) => this.setState({ name: e.target.value })} label='Add a Name' placeholder='' />
                 {/* <Form.Input value={dueDate} onChange={(e) => this.setState({ dueDate: e.target.value })} label='Add a Due Date' /> */}
-                <DuedatePicker onOpenChange={this.handleOpenChage} value={dueDate} onChange={(e, { value }) => this.setState({ dueDate: value })} label='Add a Due Date' placeholder='Add a Due Date'/>
+                <DuedatePicker fromEdit onOpenChange={this.handleOpenChage} value={dueDate} onChange={(e, { value }) => this.setState({ dueDate: value })} label='Add a Due Date' placeholder='Add a Due Date'/>
                 <Form.Dropdown disabled={fromSubjectCard && true} label='Choose a Subject' onChange={this.handleDropdown} value={subjectId} placeholder='Choose a Subject' search selection options={subjectOptions}/>
               </Form.Group>
               <Form.TextArea label='Description' placeholder='Placeholder...' autoHeight style={{ maxHeight: 300 }} rows={3}/>
@@ -226,7 +218,7 @@ class TestAddForm extends Component {
           </Modal.Content>
           <Modal.Actions>
             <Button basic onClick={this.handleClose}>Cancel</Button>
-            <Button positive onClick={() => this.handleAdd(user)}>Add</Button> 
+            <Button positive onClick={() => this.handleSave(user)}>Save</Button> 
           </Modal.Actions>
         </Modal>
       )}
@@ -236,7 +228,7 @@ class TestAddForm extends Component {
 }
 
 
-export default TestAddForm;
+export default TestEditForm;
 
 {/* <Button basic color='blue' animated='fade' onClick={this.handleOpen}>
                   <Button.Content visible>Add Test</Button.Content>

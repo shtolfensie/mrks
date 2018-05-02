@@ -13,12 +13,17 @@ import Tests from './Tests'
 import Agenda from './Agenda'
 
 export const UserContext = React.createContext({ user: null });
+export const SettingsContext = React.createContext({ settings: null });
 
 const INITIAL_STATE = {
+  // rename this you fuckhead
   activeItem: 'agenda',
   subjects: [],
-  tests: [],
+  tests: [false],
+  marks: [false],
+  subjects: [false],
   loadingTests: true,
+  loadingMarks: true,
   user: false,
 }
 
@@ -39,11 +44,16 @@ class App extends Component {
     if ((prevState.tests !== this.state.tests) && this.state.user !== null) {
       this.setState({ loadingTests: false });
     }
+    if ((prevState.marks !== this.state.marks) && this.state.user !== null) {
+      this.setState({ loadingMarks: false });
+    }
 
     if ((prevState.user === null || prevState.user === false) && this.state.user) {
       this.getAllSubjects();
       this.getAllTests();
-      alert(4)
+      this.getAllMarks();
+      this.getUserSettings();
+      // alert(4)
     }
 
     if (prevState.user !== null && this.state.user === null) this.setState(CLEAR_STATE);
@@ -56,6 +66,8 @@ class App extends Component {
     if (this.state.user !== null && this.state.user !== false) {
       this.getAllSubjects();
       this.getAllTests();
+      this.getAllMarks();
+      this.getUserSettings();
     }
   }
 
@@ -68,6 +80,8 @@ class App extends Component {
           name: data.val().name,
           initials: data.val().initials,
           teacher: data.val().teacher,
+          testIds: data.val().testIds,
+          markIds: data.val().markIds,
           key: data.key,
         });
         // console.log(data.val().name);
@@ -102,6 +116,26 @@ class App extends Component {
     });
   }
 
+  getAllMarks = () => {
+    const { user } = this.state;
+    let marksArr = [];
+    db.ref(`/marks-app/${user.uid}/marks`).orderByKey().on('value', snapshot => {
+      snapshot.forEach(mark => {
+        marksArr.push({
+          value: mark.val().value,
+          subjectId: mark.val().subjectId,
+          subjectInitials: mark.val().subjectInitials,
+          timestamp: mark.val().timestamp,
+          key: mark.key,
+          testId: mark.val().testId,
+          testName: mark.val().testName,
+        }); 
+      });
+      this.setState({ marks: marksArr });
+      marksArr = [];
+    });
+  }
+
   handleMenuItemClick = (e, {name}) => {
     this.setState({ activeItem: name })
   }
@@ -128,7 +162,13 @@ class App extends Component {
         this.setState({ user: null });
       }
     });
+  }
 
+  getUserSettings = () => {
+    db.ref(`marks-app/${this.state.user.uid}/settings`).on('value', snapshot => {
+      // console.log(snapshot.val());
+      this.setState({ settings: snapshot.val() });
+    })
   }
 
   render() {
@@ -137,8 +177,11 @@ class App extends Component {
       activeItem,
       subjects,
       tests,
+      marks,
       loadingTests,
+      loadingMarks,
       user,
+      settings,
     } = this.state;
 
     return (
@@ -155,19 +198,21 @@ class App extends Component {
         :
           user === null
         ? <SignInPage />
-        : <Grid columns={2} padded>
-            <Grid.Column width={2}>
-              <MainMenu activeItem={activeItem} handleItemClick={this.handleMenuItemClick}/>
-            </Grid.Column>
-            <Grid.Column width={14} style={{ padding: '0'}}>
-              <Button onClick={() => auth.signOut()} >Sign Out</Button>
-              { activeItem === 'home' && <HomePage /> }
-              { activeItem === 'marks' && <Marks subjects={subjects} tests={tests}/> }
-              { activeItem === 'subjects' && <Subjects subjects={subjects} tests={tests}/> }
-              { activeItem === 'tests' && <Tests loadingTests={loadingTests} subjects={subjects} tests={tests}/> }
-              { activeItem === 'agenda' && <Agenda loadingTests={loadingTests} subjects={subjects} tests={tests}/> }
-            </Grid.Column>
-          </Grid>
+        : <SettingsContext.Provider value={settings}>
+            <Grid columns={2} padded>
+                <Grid.Column computer={2} tablet={3}>
+                  <MainMenu user={user} activeItem={activeItem} handleItemClick={this.handleMenuItemClick}/>
+                </Grid.Column>
+                <Grid.Column comouter={14} tablet={13} style={{ padding: '0'}}>
+                  {/* <Button onClick={() => auth.signOut()} >Sign Out</Button> */}
+                  { activeItem === 'home' && <HomePage /> }
+                  { activeItem === 'marks' && <Marks loadingMarks={loadingMarks} marks={marks} subjects={subjects} tests={tests}/> }
+                  { activeItem === 'subjects' && <Subjects user={user} subjects={subjects} tests={tests}/> }
+                  { activeItem === 'tests' && <Tests settings={settings} user={user} loadingTests={loadingTests} subjects={subjects} tests={tests}/> }
+                  { activeItem === 'agenda' && <Agenda loadingMarks={loadingMarks} loadingTests={loadingTests} marks={marks} subjects={subjects} tests={tests}/> }
+                </Grid.Column>
+              </Grid>
+        </SettingsContext.Provider>
         }
       </UserContext.Provider>
 
