@@ -118,7 +118,7 @@ class Agenda extends Component {
           </Segment>
           <SettingsContext.Consumer>
             { settings => (
-            <Grid columns={3} padded>
+            <Grid columns={3} doubling stackable style={{padding: '1rem'}} >
               <Grid.Row>
                 <Grid.Column>
                   <Tests settings={settings} user={user} loadingTests={loadingTests} subjects={subjects} tests={tests} fromAgenda={true}/>

@@ -25,6 +25,7 @@ const INITIAL_STATE = {
   loadingTests: true,
   loadingMarks: true,
   user: false,
+  settings: false,
 }
 
 const CLEAR_STATE = {
@@ -56,6 +57,8 @@ class App extends Component {
       // alert(4)
     }
 
+    if (this.state.settings !== prevState.settings) this.setState({ activeItem: this.state.settings.mainMenu });    
+
     if (prevState.user !== null && this.state.user === null) this.setState(CLEAR_STATE);
 
   }
@@ -68,6 +71,8 @@ class App extends Component {
       this.getAllTests();
       this.getAllMarks();
       this.getUserSettings();
+
+      if (this.state.settings !== undefined && this.state.settings !== false) this.setState({ activeItem: this.state.settings.mainMenu });
     }
   }
 
@@ -137,7 +142,8 @@ class App extends Component {
   }
 
   handleMenuItemClick = (e, {name}) => {
-    this.setState({ activeItem: name })
+    this.setState({ activeItem: name });
+    db.ref(`marks-app/${this.state.user.uid}/settings/mainMenu`).set(name);
   }
 
   styles = {
@@ -194,16 +200,16 @@ class App extends Component {
       // </div>
 
       <UserContext.Provider value={user}>
-        {user === false ? <Loader active />
+        {(user === false || settings === false) ? <Loader active />
         :
           user === null
         ? <SignInPage />
         : <SettingsContext.Provider value={settings}>
             <Grid columns={2} padded>
-                <Grid.Column computer={2} tablet={3}>
+                <Grid.Column computer={2} tablet={3} mobile={4}>
                   <MainMenu user={user} activeItem={activeItem} handleItemClick={this.handleMenuItemClick}/>
                 </Grid.Column>
-                <Grid.Column comouter={14} tablet={13} style={{ padding: '0'}}>
+                <Grid.Column computer={14} tablet={13} mobile={12} style={{ padding: '0'}}>
                   {/* <Button onClick={() => auth.signOut()} >Sign Out</Button> */}
                   { activeItem === 'home' && <HomePage /> }
                   { activeItem === 'marks' && <Marks loadingMarks={loadingMarks} marks={marks} subjects={subjects} tests={tests}/> }
