@@ -10,7 +10,7 @@ import * as DateUtils from './utils/DateUtils'
 import TestAddForm from './TestAddForm'
 import TestEditForm from './TestEditForm'
 import DeleteConfirmModal from './DeleteConfirmModal'
-import AgendaSubMenu from './AgendaSubMenu'
+import TestsMenu from './TestsMenu'
 import MarkAddForm from './MarkAddForm'
 
 import { UserContext } from './App'
@@ -179,7 +179,7 @@ class Tests extends Component {
       <div>
         {/* Input for subject filter (only Fy, Cj, ...), should add a dropdown menu with all the available subjects on the future */}
         {/* <Input type='text' onChange={(e) => this.handleSubjectFilterChange(e)} /> */}
-        <AgendaSubMenu handleSearchFilterChange={this.handleSearchFilterChange} showGraded={showGraded} date={date} groupBy={groupBy} handleRangeChange={this.handleRangeChange} handleGradedChange={this.handleGradedChange} handleGroupByChange={this.handleGroupByChange} subjects={subjects} />
+        <TestsMenu handleSearchFilterChange={this.handleSearchFilterChange} showGraded={showGraded} date={date} groupBy={groupBy} handleRangeChange={this.handleRangeChange} handleGradedChange={this.handleGradedChange} handleGroupByChange={this.handleGroupByChange} subjects={subjects} />
         <Segment attached='bottom'>
         <Loader active={loadingTests}/>
         { tests.length === 0 && <div style={{ textAlign: 'center' }}>Look's like you don't have any tests.</div>}

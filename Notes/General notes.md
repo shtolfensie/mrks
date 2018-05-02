@@ -1,5 +1,9 @@
 ## General notes about the mrks app
 
+### Subjects
+
+- maybe get subject marks from all marks, not via call to firebase, might be slow and expensive
+
 ### Marks
 
 #### _DONE_ ~~Marks array request~~

@@ -200,10 +200,10 @@ class App extends Component {
         ? <SignInPage />
         : <SettingsContext.Provider value={settings}>
             <Grid columns={2} padded>
-                <Grid.Column width={2}>
+                <Grid.Column computer={2} tablet={3}>
                   <MainMenu user={user} activeItem={activeItem} handleItemClick={this.handleMenuItemClick}/>
                 </Grid.Column>
-                <Grid.Column width={14} style={{ padding: '0'}}>
+                <Grid.Column comouter={14} tablet={13} style={{ padding: '0'}}>
                   {/* <Button onClick={() => auth.signOut()} >Sign Out</Button> */}
                   { activeItem === 'home' && <HomePage /> }
                   { activeItem === 'marks' && <Marks loadingMarks={loadingMarks} marks={marks} subjects={subjects} tests={tests}/> }

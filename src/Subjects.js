@@ -117,7 +117,7 @@ class SubjectCard extends Component {
   }
 
   componentWillUnmount() {
-    db.ref(`marks-app/${this.props.user.uid}/marks`).off();
+    db.ref(`marks-app/${this.props.user.uid}/marks`).orderByChild('subjectId').equalTo(this.props.subject.key).off();
     this.setState({ subjectMarks: [] })
   }
 

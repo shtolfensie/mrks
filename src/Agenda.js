@@ -7,7 +7,6 @@ import { SettingsContext } from './App'
 
 import Tests from './Tests'
 import Marks from './Marks'
-import AgendaSubMenu from './AgendaSubMenu'
 
 class Agenda extends Component {
   constructor(props) {
@@ -125,7 +124,7 @@ class Agenda extends Component {
                   <Tests settings={settings} user={user} loadingTests={loadingTests} subjects={subjects} tests={tests} fromAgenda={true}/>
                 </Grid.Column>
                 <Grid.Column>
-                  <Marks loadingMarks={loadingMarks} user={user} marks={marks} subjects={subjects} tests={tests}/>
+                  
                 </Grid.Column>
                 <Grid.Column></Grid.Column>
               </Grid.Row>

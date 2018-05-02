@@ -4,7 +4,7 @@ import { Checkbox, Menu, Dropdown, Icon, Input, } from 'semantic-ui-react'
 
 import TestAddForm from './TestAddForm'
 
-class AgendaSubMenu extends Component {
+class TestsMenu extends Component {
 
   handleGroupByChange = (groupBy) => {
     this.props.handleGroupByChange(groupBy);
@@ -58,7 +58,7 @@ class AgendaSubMenu extends Component {
         </Dropdown>
         <TestAddForm subjects={subjects} />
         <Menu.Item position='right' >
-          <Input transparent icon='search' placeholder='Search tests...' onChange={handleSearchFilterChange} />
+          <Input style={{width: '9rem'}} icon='search' transparent placeholder='Search tests...' onChange={handleSearchFilterChange} />
         </Menu.Item>
       </Menu>
     )
@@ -66,4 +66,4 @@ class AgendaSubMenu extends Component {
 }
 
 
-export default AgendaSubMenu;
+export default TestsMenu;
