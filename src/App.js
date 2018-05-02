@@ -200,7 +200,7 @@ class App extends Component {
       // </div>
 
       <UserContext.Provider value={user}>
-        {(user === false || settings === false) ? <Loader active />
+        {(user === false || settings === false) && user !== null ? <Loader active />
         :
           user === null
         ? <SignInPage />
