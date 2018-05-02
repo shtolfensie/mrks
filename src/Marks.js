@@ -50,13 +50,13 @@ class Marks extends Component {
     return(
       <div>
         {/* <AgendaSubMenu handleSearchFilterChange={this.handleSearchFilterChange} showGraded={false} date={false} groupBy={false} handleRangeChange={this.handleRangeChange} handleGradedChange={this.handleGradedChange} handleGroupByChange={this.handleGroupByChange} subjects={subjects} />         */}
-        <Segment attached='bottom'>
-        <MarkAddForm subjects={subjects} tests={tests}> <Icon link name='plus' /> </MarkAddForm>
-        <Loader active={loadingMarks}/>
-        { marks.length === 0  && <div style={{ textAlign: 'center' }}>Look's like you don't have any marks.</div>}
-        <List divided>
-          {marks[0] !== false && marks.map((mark, i) => <MarkItem key={i} handleDelete={this.handleDelete} mark={mark} markId={mark.key} subjectId={mark.subjectId} value={mark.value} subjectInitials={mark.subjectInitials} timestamp={mark.timestamp} />)}
-        </List>
+        <Segment attached='bottom' style={{margin: '1rem'}}>
+          <MarkAddForm subjects={subjects} tests={tests}> <Icon link name='plus' /> </MarkAddForm>
+          <Loader active={loadingMarks}/>
+          { marks.length === 0  && <div style={{ textAlign: 'center' }}>Look's like you don't have any marks.</div>}
+          <List divided>
+            {marks[0] !== false && marks.map((mark, i) => <MarkItem key={i} handleDelete={this.handleDelete} mark={mark} markId={mark.key} subjectId={mark.subjectId} value={mark.value} subjectInitials={mark.subjectInitials} timestamp={mark.timestamp} />)}
+          </List>
         </Segment>  
       </div>
     )
@@ -67,12 +67,10 @@ class Marks extends Component {
 
 const MarkItem = ({ handleDelete, mark }) =>
   <List.Item>
-    <Grid padded celled='internally' columns='equal' >
+    <Grid padded columns='equal' >
       <Grid.Row stretched columns={3}>
         <Grid.Column textAlign='center' verticalAlign='middle' computer={1} tablet={2}>
-          <Segment textAlign='center' color='purple'>
-            <Header content={mark.value} size='medium' />
-          </Segment>
+          <Header content={mark.value} size='huge' />
         </Grid.Column>
         <Grid.Column>
           <Header size='medium' content={mark.subjectInitials}/>

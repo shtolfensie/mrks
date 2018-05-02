@@ -73,7 +73,7 @@ class Tests extends Component {
     }
 
     // set settings from firebase if they exist
-    if (this.props.settings !== undefined && this.props.settings !== null) {
+    if (this.props.settings !== undefined && this.props.settings) {
       if (prevProps.settings !== this.props.settings && this.props.settings.tests.filterBy !== undefined) {
         this.setState({ filterBy: this.props.settings.tests.filterBy });      
       }

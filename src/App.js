@@ -57,7 +57,10 @@ class App extends Component {
       // alert(4)
     }
 
-    if (this.state.settings !== prevState.settings) this.setState({ activeItem: this.state.settings.mainMenu });    
+    if (this.state.settings !== prevState.settings) {
+      this.setState({ activeItem: this.state.settings.mainMenu });    
+      if (this.state.settings.mainMenu === undefined && this.state.user) db.ref(`marks-app/${this.state.user.uid}/settings/mainMenu`).set(this.state.activeItem);
+    }
 
     if (prevState.user !== null && this.state.user === null) this.setState(CLEAR_STATE);
 
@@ -173,7 +176,12 @@ class App extends Component {
   getUserSettings = () => {
     db.ref(`marks-app/${this.state.user.uid}/settings`).on('value', snapshot => {
       // console.log(snapshot.val());
-      this.setState({ settings: snapshot.val() });
+      if (snapshot.val()) {
+        this.setState({ settings: snapshot.val() });
+      }
+      else this.setState({ settings: false });
+      console.log(snapshot.val());
+      
     })
   }
 
