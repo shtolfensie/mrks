@@ -176,7 +176,7 @@ class Tests extends Component {
     } = filterBy;
 
     return (
-      <div>
+      <div style={ fromAgenda ? {} : {margin: '1rem'} }>
         {/* Input for subject filter (only Fy, Cj, ...), should add a dropdown menu with all the available subjects on the future */}
         {/* <Input type='text' onChange={(e) => this.handleSubjectFilterChange(e)} /> */}
         <TestsMenu handleSearchFilterChange={this.handleSearchFilterChange} showGraded={showGraded} date={date} groupBy={groupBy} handleRangeChange={this.handleRangeChange} handleGradedChange={this.handleGradedChange} handleGroupByChange={this.handleGroupByChange} subjects={subjects} />

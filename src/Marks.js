@@ -4,7 +4,8 @@ import { List, Grid, Segment, Header, Button, Confirm, Loader, Icon, } from 'sem
 import { db } from './firebase'
 import * as DateUtils from './utils/DateUtils'
 
-import MarkAddForm from './MarkAddForm'
+// import MarkAddForm from './MarkAddForm'
+import MarksMenu from './MarksMenu'
 import DeleteConfirmModal from './DeleteConfirmModal'
 
 class Marks extends Component {
@@ -48,10 +49,10 @@ class Marks extends Component {
     } = this.props;
 
     return(
-      <div>
+      <div style={{margin: '1rem'}}>
         {/* <AgendaSubMenu handleSearchFilterChange={this.handleSearchFilterChange} showGraded={false} date={false} groupBy={false} handleRangeChange={this.handleRangeChange} handleGradedChange={this.handleGradedChange} handleGroupByChange={this.handleGroupByChange} subjects={subjects} />         */}
-        <Segment attached='bottom' style={{margin: '1rem'}}>
-          <MarkAddForm subjects={subjects} tests={tests}> <Icon link name='plus' /> </MarkAddForm>
+        <MarksMenu subjects={subjects} tests={tests}/>
+        <Segment attached='bottom'>
           <Loader active={loadingMarks}/>
           { marks.length === 0  && <div style={{ textAlign: 'center' }}>Look's like you don't have any marks.</div>}
           <List divided>

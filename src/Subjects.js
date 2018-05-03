@@ -10,6 +10,7 @@ import MarkAddForm from './MarkAddForm'
 import TestAddForm from './TestAddForm'
 import DeleteButton from './DeleteButton'
 import DeleteConfirmModal from './DeleteConfirmModal'
+import SubjectsMenu from './SubjectsMenu'
 
 function round(value, decimals) {
   return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
@@ -66,8 +67,10 @@ class Subjects extends Component {
 
     return (
       <div>
-        <SubjectAddForm />
+        <SubjectsMenu />
+        { subjects.length === 0 && <div style={{ textAlign: 'center', marginTop: '2rem'}}> <Header content="Look's like you don't have any subjects yet. You can go ahead and add some." /> </div> }
         <Grid doubling padded columns={3}>
+
           {subjects.length !== 0 && subjects.map((subject, i) => (
             <Grid.Column
               style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center'}}

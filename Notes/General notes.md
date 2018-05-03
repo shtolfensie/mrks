@@ -4,6 +4,11 @@
 
 - maybe get subject marks from all marks, not via call to firebase, might be slow and expensive
 
+### Agenda
+- top header 'responsivnes' is total bullshit
+- should be fixed right now
+- it reacts to window resize, but it sucks.
+
 ### Marks
 
 #### _DONE_ ~~Marks array request~~
@@ -30,6 +35,7 @@
 - use regexp for searching
 - finish subject filter
 - teacher field in subject is probably not required
+- why are subjects required for tests? maybe fix that
 
 #### Filtering of `test` array
 - Right now the only filter available is **Include graded** and the current setup doesn't allow for chaining of filters.

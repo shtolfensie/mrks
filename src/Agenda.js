@@ -12,7 +12,9 @@ class Agenda extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {}
+    this.state = {
+      updateStyles: 0,
+    }
   }
 
   styles = {
@@ -23,6 +25,40 @@ class Agenda extends Component {
     noPaddingSegment: {
       padding: '0',
     },
+    topHeader: {
+      margin: '1rem 1rem 0 1rem',
+      display: '',
+    }
+  }
+
+  componentDidMount() {
+    this.responsiveStyles();
+  }
+  
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.checkWidth);
+  }
+
+
+  // this is fucking terrible. 
+  //fix it
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  responsiveStyles = () => {
+    
+    window.addEventListener('resize', this.checkWidth);
+    this.checkWidth();
+
+  }
+
+  checkWidth = () => {
+    if (window.matchMedia("(max-width: 992px)").matches && this.state.updateStyles === 0) {
+      this.styles.topHeader = {display: 'none'};
+      this.setState({ updateStyles: 1 });
+    }
+    else if (!window.matchMedia("(max-width: 992px)").matches && this.state.updateStyles === 1) {
+      this.styles.topHeader = {margin: '1rem 1rem 0 1rem',};
+      this.setState({ updateStyles: 0 });
+    }
   }
 
   render() {
@@ -36,6 +72,61 @@ class Agenda extends Component {
     } = this.props;
 
     return (
+
+    <UserContext.Consumer>
+      { user => (
+        <div>
+          <Segment style={this.styles.topHeader}>
+          <Grid columns={3} padded>
+            <Grid.Row only='computer'>
+              <Grid.Column style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                <Header textAlign='center' size='large' content='Tests' />
+                <div style={{ borderBottom: '2px solid red', width: '75%'}}></div>
+              </Grid.Column>
+              <Grid.Column style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                <Header textAlign='center' size='large' content='Homework' />
+                <div style={{ borderBottom: '2px solid red', width: '75%'}}></div>            
+              </Grid.Column>
+              <Grid.Column style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                <Header textAlign='center' size='large' content='Reminders' />
+                <div style={{ borderBottom: '2px solid red', width: '75%'}}></div>            
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+          </Segment>
+          <SettingsContext.Consumer>
+            { settings => (
+            <Grid columns={3} doubling stackable style={{padding: '1rem'}} >
+              <Grid.Row>
+                <Grid.Column>
+                  <Tests settings={settings} user={user} loadingTests={loadingTests} subjects={subjects} tests={tests} fromAgenda={true}/>
+                </Grid.Column>
+                <Grid.Column>
+                  <Tests settings={settings} user={user} loadingTests={loadingTests} subjects={subjects} tests={tests} fromAgenda={true}/>
+                  {/* <Marks user={user} loadingMarks={loadingMarks} marks={marks} subjects={subjects} tests={tests}/> */}
+                </Grid.Column>
+                <Grid.Column>
+                  <Tests settings={settings} user={user} loadingTests={loadingTests} subjects={subjects} tests={tests} fromAgenda={true}/>
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+            )}
+          </SettingsContext.Consumer>
+        </div>
+      )}
+      </UserContext.Consumer>
+    )
+  }
+}
+
+
+export default Agenda;
+
+
+
+
+
+
       // <Grid padded columns={2}>
       //   <Grid.Column>
       //     {/* <Segment.Group horizontal>
@@ -95,48 +186,3 @@ class Agenda extends Component {
       //     </Segment>
       //   </Grid.Column>
       // </Grid>
-    <UserContext.Consumer>
-      { user => (
-        <div>
-          <Segment style={{ margin: '1rem 1rem 0 1rem'}}>
-          <Grid columns={3} padded>
-            <Grid.Row>
-              <Grid.Column style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                <Header textAlign='center' size='large' content='Tests' />
-                <div style={{ borderBottom: '2px solid red', width: '75%'}}></div>
-              </Grid.Column>
-              <Grid.Column style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                <Header textAlign='center' size='large' content='Homework' />
-                <div style={{ borderBottom: '2px solid red', width: '75%'}}></div>            
-              </Grid.Column>
-              <Grid.Column style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                <Header textAlign='center' size='large' content='Reminders' />
-                <div style={{ borderBottom: '2px solid red', width: '75%'}}></div>            
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-          </Segment>
-          <SettingsContext.Consumer>
-            { settings => (
-            <Grid columns={3} doubling stackable style={{padding: '1rem'}} >
-              <Grid.Row>
-                <Grid.Column>
-                  <Tests settings={settings} user={user} loadingTests={loadingTests} subjects={subjects} tests={tests} fromAgenda={true}/>
-                </Grid.Column>
-                <Grid.Column>
-                  
-                </Grid.Column>
-                <Grid.Column></Grid.Column>
-              </Grid.Row>
-            </Grid>
-            )}
-          </SettingsContext.Consumer>
-        </div>
-      )}
-      </UserContext.Consumer>
-    )
-  }
-}
-
-
-export default Agenda;

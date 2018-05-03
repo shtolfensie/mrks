@@ -75,10 +75,7 @@ class SubjectAddForm extends Component {
       <UserContext.Consumer>
         {user => (
         <Modal
-          trigger={<Button animated='fade' onClick={this.handleOpen}>
-                    <Button.Content visible>Add a Subject</Button.Content>
-                    <Button.Content hidden><Icon name='plus'/></Button.Content>
-                  </Button>}
+          trigger={ <div onClick={this.handleOpen}>{this.props.children}</div> }
           open={open}
           onClose={this.handleClose}
           dimmer={false}
@@ -124,3 +121,10 @@ export default SubjectAddForm;
           <label for='subjectTeacherInput'>Teacher: </label>
           <input id='subjectTeacherInput' type='text' value={subjectTeacher} onChange={(e) => this.setState({ subjectTeacher: e.target.value })}/>
         </form> */}
+
+
+
+{/* <Button animated='fade' onClick={this.handleOpen}>
+                    <Button.Content visible>Add a Subject</Button.Content>
+                    <Button.Content hidden><Icon name='plus'/></Button.Content>
+                  </Button> */}
