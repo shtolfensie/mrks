@@ -1,5 +1,7 @@
 ## General notes about the mrks app
 
+- try putting test, subject edit form into one component
+
 ### Subjects
 
 - maybe get subject marks from all marks, not via call to firebase, might be slow and expensive

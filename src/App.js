@@ -21,9 +21,11 @@ const INITIAL_STATE = {
   subjects: [],
   tests: [false],
   marks: [false],
+  homework: [false],
   subjects: [false],
   loadingTests: true,
   loadingMarks: true,
+  loadingHomework: true,
   user: false,
   settings: false,
 }
@@ -49,10 +51,20 @@ class App extends Component {
       this.setState({ loadingMarks: false });
     }
 
+    if ((prevState.homework !== this.state.homework) && this.state.user !== null) {
+      this.setState({ loadingHomework: false });
+    }
+
+    if ((prevState.reminders !== this.state.reminders) && this.state.user !== null) {
+      this.setState({ loadingReminders: false });
+    }
+
     if ((prevState.user === null || prevState.user === false) && this.state.user) {
       this.getAllSubjects();
       this.getAllTests();
       this.getAllMarks();
+      this.getAllHomework();
+      this.getAllReminders();
       this.getUserSettings();
       // alert(4)
     }
@@ -73,6 +85,8 @@ class App extends Component {
       this.getAllSubjects();
       this.getAllTests();
       this.getAllMarks();
+      this.getAllHomework();
+      this.getAllReminders();
       this.getUserSettings();
 
       if (this.state.settings !== undefined && this.state.settings !== false) this.setState({ activeItem: this.state.settings.mainMenu });
@@ -90,6 +104,8 @@ class App extends Component {
           teacher: data.val().teacher,
           testIds: data.val().testIds,
           markIds: data.val().markIds,
+          homeworkIds: data.val().homeworkIds,
+          reminderIds: data.val().reminderIds,
           key: data.key,
         });
         // console.log(data.val().name);
@@ -121,6 +137,50 @@ class App extends Component {
       console.log(this.state.tests);
       
       testsArr = [];
+    });
+  }
+
+  getAllHomework = () => {
+    const { user } = this.state;
+    let homeworkArr = [];
+    db.ref(`/marks-app/${user.uid}/homework`).orderByChild('dueDate').on('value', snapshot => {
+      snapshot.forEach(homework => {
+        homeworkArr.push({
+          name: homework.val().name,
+          dueDate: homework.val().dueDate,
+          subjectId: homework.val().subjectId,
+          subjectInitials: homework.val().subjectInitials,
+          timestamp: homework.val().timestamp,
+          key: homework.key,
+          // markId: test.val().markId ? test.val().markId : undefined,
+        }); 
+      });
+      this.setState({ homework: homeworkArr });
+      // this.setState({ tests: [] });
+      
+      homeworkArr = [];
+    });
+  }
+
+  getAllReminders = () => {
+    const { user } = this.state;
+    let remindersArr = [];
+    db.ref(`/marks-app/${user.uid}/reminders`).orderByChild('dueDate').on('value', snapshot => {
+      snapshot.forEach(reminder => {
+        remindersArr.push({
+          name: reminder.val().name,
+          dueDate: reminder.val().dueDate,
+          subjectId: reminder.val().subjectId,
+          subjectInitials: reminder.val().subjectInitials,
+          timestamp: reminder.val().timestamp,
+          key: reminder.key,
+          // markId: test.val().markId ? test.val().markId : undefined,
+        }); 
+      });
+      this.setState({ reminders: remindersArr });
+      // this.setState({ tests: [] });
+      
+      remindersArr = [];
     });
   }
 
@@ -192,8 +252,12 @@ class App extends Component {
       subjects,
       tests,
       marks,
+      homework,
+      reminders,
       loadingTests,
       loadingMarks,
+      loadingHomework,
+      loadingReminders,
       user,
       settings,
     } = this.state;
@@ -223,7 +287,7 @@ class App extends Component {
                   { activeItem === 'marks' && <Marks user={user} loadingMarks={loadingMarks} marks={marks} subjects={subjects} tests={tests}/> }
                   { activeItem === 'subjects' && <Subjects user={user} subjects={subjects} tests={tests}/> }
                   { activeItem === 'tests' && <Tests settings={settings} user={user} loadingTests={loadingTests} subjects={subjects} tests={tests}/> }
-                  { activeItem === 'agenda' && <Agenda loadingMarks={loadingMarks} loadingTests={loadingTests} marks={marks} subjects={subjects} tests={tests}/> }
+                  { activeItem === 'agenda' && <Agenda loadingReminders={loadingReminders} loadingHomework={loadingHomework} loadingMarks={loadingMarks} loadingTests={loadingTests} reminders={reminders} homework={homework} marks={marks} subjects={subjects} tests={tests}/> }
                 </Grid.Column>
               </Grid>
         </SettingsContext.Provider>

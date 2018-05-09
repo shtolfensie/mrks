@@ -7,6 +7,8 @@ import { SettingsContext } from './App'
 
 import Tests from './Tests'
 import Marks from './Marks'
+import Homework from './Homework'
+import Reminders from './Reminders'
 
 class Agenda extends Component {
   constructor(props) {
@@ -67,8 +69,12 @@ class Agenda extends Component {
       subjects,
       tests,
       marks,
+      homework,
+      reminders,
       loadingTests,
       loadingMarks,
+      loadingHomework,
+      loadingReminders,
     } = this.props;
 
     return (
@@ -102,11 +108,11 @@ class Agenda extends Component {
                   <Tests settings={settings} user={user} loadingTests={loadingTests} subjects={subjects} tests={tests} fromAgenda={true}/>
                 </Grid.Column>
                 <Grid.Column>
-                  <Tests settings={settings} user={user} loadingTests={loadingTests} subjects={subjects} tests={tests} fromAgenda={true}/>
+                  <Homework settings={settings} user={user} loadingHomework={loadingHomework} subjects={subjects} homework={homework} fromAgenda={true}/>
                   {/* <Marks user={user} loadingMarks={loadingMarks} marks={marks} subjects={subjects} tests={tests}/> */}
                 </Grid.Column>
                 <Grid.Column>
-                  <Tests settings={settings} user={user} loadingTests={loadingTests} subjects={subjects} tests={tests} fromAgenda={true}/>
+                  <Reminders settings={settings} user={user} loadingReminders={loadingReminders} subjects={subjects} reminders={reminders} fromAgenda={true}/>
                 </Grid.Column>
               </Grid.Row>
             </Grid>

@@ -73,7 +73,7 @@ class DuedatePicker extends Component {
 
   checkIfOpen = () => {
     if (this.props.value === 'other') this.handleOpen();
-    console.log('check if open');
+    // console.log('check if open');
     
   }
 

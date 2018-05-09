@@ -43,18 +43,33 @@ class Subjects extends Component {
   // }
 
   handleDelete = (id) => {
-    const subjectRefPath = `/marks-app/${this.props.user.uid}/subjects/${id}`;
-    db.ref(`${subjectRefPath}/testIds`).once('value', testIdKeyArr => {
-      testIdKeyArr.forEach(testIdKey => {
-        db.ref(`marks-app/${this.props.user.uid}/tests/${testIdKey.val().testId}`).remove();
-      });
-    });
-    db.ref(`${subjectRefPath}/markIds`).once('value', markIdKeyArr => {
-      markIdKeyArr.forEach(markIdKey => {
-        db.ref(`marks-app/${this.props.user.uid}/marks/${markIdKey.val().markId}`).remove();
-      })
-    });
-    db.ref(subjectRefPath).remove();
+    const {
+      subjects,
+      user,
+    } = this.props;
+    const userRefPath = `/marks-app/${this.props.user.uid}`;
+    this.props.subjects.forEach(subject => {
+      if (subject.key === id) {
+        let homeworkRefPaths = {};
+        let testsRefPaths = {};
+        let marksRefPaths = {};
+
+        if (subject.homeworkIds) Object.keys(subject.homeworkIds).forEach(homeworkIdKey => {
+          // db.ref(`${userRefPath}/homework/${subject.homeworkIds[homeworkIdKey].homeworkId}`).remove();
+          homeworkRefPaths[`${userRefPath}/homework/${subject.homeworkIds[homeworkIdKey].homeworkId}`] = null;
+        });
+        if (subject.testIds) Object.keys(subject.testIds).forEach(testIdKey => {
+          // db.ref(`${userRefPath}/tests/${subject.testIds[testIdKey].testId}`).remove();
+          testsRefPaths[`${userRefPath}/tests/${subject.testIds[testIdKey].testId}`] = null;
+        });
+        if (subject.markIds) Object.keys(subject.markIds).forEach(markIdKey => {
+          // db.ref(`${userRefPath}/marks/${subject.markIds[markIdKey].markId}`).remove();
+          marksRefPaths[`${userRefPath}/marks/${subject.markIds[markIdKey].markId}`] = null;
+        });
+        db.ref().update({ ...homeworkRefPaths, ...marksRefPaths, ...testsRefPaths });
+      }
+    })
+    db.ref(`${userRefPath}/subjects/${id}`).remove();
   }
 
   render() {
