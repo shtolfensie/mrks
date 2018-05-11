@@ -13,6 +13,8 @@
 
 ### Marks
 
+- ability to add Date to marks if no test is selected
+
 #### _DONE_ ~~Marks array request~~
 - ~~Might want to get all marks in the main app, right now they are requested in the `<Marks />` component.~~
 - ~~like this, the app doesn't need to load them if they are not needed right away. At this time, that includes the `Home`, `Subjects`* and the `Tests` components.~~

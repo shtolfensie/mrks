@@ -283,7 +283,7 @@ class App extends Component {
                 </Grid.Column>
                 <Grid.Column computer={14} tablet={13} mobile={12} style={{ padding: '0'}}>
                   {/* <Button onClick={() => auth.signOut()} >Sign Out</Button> */}
-                  { activeItem === 'home' && <HomePage /> }
+                  { activeItem === 'home' && <HomePage tests={tests} subjects={subjects} /> }
                   { activeItem === 'marks' && <Marks user={user} loadingMarks={loadingMarks} marks={marks} subjects={subjects} tests={tests}/> }
                   { activeItem === 'subjects' && <Subjects user={user} subjects={subjects} tests={tests}/> }
                   { activeItem === 'tests' && <Tests settings={settings} user={user} loadingTests={loadingTests} subjects={subjects} tests={tests}/> }

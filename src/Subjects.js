@@ -53,6 +53,7 @@ class Subjects extends Component {
         let homeworkRefPaths = {};
         let testsRefPaths = {};
         let marksRefPaths = {};
+        let remindersRefPaths = {};
 
         if (subject.homeworkIds) Object.keys(subject.homeworkIds).forEach(homeworkIdKey => {
           // db.ref(`${userRefPath}/homework/${subject.homeworkIds[homeworkIdKey].homeworkId}`).remove();
@@ -66,7 +67,11 @@ class Subjects extends Component {
           // db.ref(`${userRefPath}/marks/${subject.markIds[markIdKey].markId}`).remove();
           marksRefPaths[`${userRefPath}/marks/${subject.markIds[markIdKey].markId}`] = null;
         });
-        db.ref().update({ ...homeworkRefPaths, ...marksRefPaths, ...testsRefPaths });
+        if (subject.reminderIds) Object.keys(subject.reminderIds).forEach(reminderIdKey => {
+          // db.ref(`${userRefPath}/marks/${subject.markIds[markIdKey].markId}`).remove();
+          remindersRefPaths[`${userRefPath}/reminders/${subject.reminderIds[reminderIdKey].reminderId}`] = null;
+        });
+        db.ref().update({ ...homeworkRefPaths, ...marksRefPaths, ...testsRefPaths, ...remindersRefPaths });
       }
     })
     db.ref(`${userRefPath}/subjects/${id}`).remove();
@@ -237,9 +242,6 @@ class SubjectCard extends Component {
           </Card.Content>
           <Card.Content>
             <Progress error={isProgressError} label='You fucking suck.' progress content={subjectDisplayAverage} className='indicating' value={subjectAverage} total={5} size='small' />
-          </Card.Content>
-          <Card.Content>
-            {subjectTests.length}
           </Card.Content>
           {/* <Card.Content extra>
             <Button.Group fluid widths='1' >

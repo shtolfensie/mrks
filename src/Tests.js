@@ -228,3 +228,7 @@ const TestItem = ({ test, i, handleDelete, subjects }) =>
   </List.Item>
 
 export default Tests;
+
+export {
+  TestItem,
+}
