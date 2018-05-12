@@ -71,7 +71,7 @@ class Reminders extends Component {
     }
 
     // set settings from firebase if they exist
-    if (this.props.settings !== undefined && this.props.settings) {
+    if (this.props.settings !== undefined && this.props.settings.reminders !== undefined) {
       if (prevProps.settings !== this.props.settings && this.props.settings.homework.filterBy !== undefined) {
         this.setState({ filterBy: this.props.settings.homework.filterBy });      
       }

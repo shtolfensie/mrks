@@ -215,7 +215,7 @@ class RemindersAddForm extends Component {
                 <DuedatePicker onOpenChange={this.handleOpenChage} value={dueDate} onChange={(e, { value }) => this.setState({ dueDate: value })} label='Add a Due Date' placeholder='Add a Due Date'/>
                 <Form.Dropdown disabled={fromSubjectCard && true} label='Choose a Subject' onChange={this.handleDropdown} value={subjectId} placeholder='Choose a Subject' search selection options={subjectOptions}/>
               </Form.Group>
-              <Form.TextArea label='Description' placeholder='Placeholder...' autoHeight style={{ maxHeight: 300 }} rows={3}/>
+              <Form.TextArea label='Description' placeholder='!!! NOT YET IMPLEMENTED !!!' autoHeight style={{ maxHeight: 300 }} rows={3}/>
               {/* <Form.Button onClick={this.handleAdd} positive>Add</Form.Button> */}
               <Message 
                 error

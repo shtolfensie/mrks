@@ -102,10 +102,10 @@ class App extends Component {
           name: data.val().name,
           initials: data.val().initials,
           teacher: data.val().teacher,
-          testIds: data.val().testIds,
-          markIds: data.val().markIds,
-          homeworkIds: data.val().homeworkIds,
-          reminderIds: data.val().reminderIds,
+          testIds: data.val().testIds ? data.val().testIds : {},
+          markIds: data.val().markIds ? data.val().markIds : {},
+          homeworkIds: data.val().homeworkIds ? data.val().homeworkIds : {},
+          reminderIds: data.val().reminderIds ? data.val().reminderIds : {},
           key: data.key,
         });
         // console.log(data.val().name);

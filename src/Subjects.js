@@ -6,6 +6,7 @@ import { List, Segment, Header, Icon, Menu, } from 'semantic-ui-react'
 import { db } from './firebase'
 
 import SubjectAddForm from './SubjectAddForm'
+import SubjectEditForm from './SubjectEditForm'
 import MarkAddForm from './MarkAddForm'
 import TestAddForm from './TestAddForm'
 import DeleteButton from './DeleteButton'
@@ -256,6 +257,9 @@ class SubjectCard extends Component {
             </Menu.Item>
             <Menu.Item as={'a'}>
               <DeleteConfirmModal handleConfirm={() => handleDelete(key)}> <Icon name='trash outline' /> </DeleteConfirmModal>
+            </Menu.Item>
+            <Menu.Item as={'a'}>
+              <SubjectEditForm subject={subject} >Edit Subject</SubjectEditForm>
             </Menu.Item>
           </Menu>
         </Card>

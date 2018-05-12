@@ -71,7 +71,7 @@ class Homework extends Component {
     }
 
     // set settings from firebase if they exist
-    if (this.props.settings !== undefined && this.props.settings) {
+    if (this.props.settings !== undefined && this.props.settings.homework !== undefined) {
       if (prevProps.settings !== this.props.settings && this.props.settings.homework.filterBy !== undefined) {
         this.setState({ filterBy: this.props.settings.homework.filterBy });      
       }

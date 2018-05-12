@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 
 import _ from 'lodash'
 
+import { db } from './firebase'
+
 import * as DateUtils from './utils/DateUtils'
 
 import { Segment, List, Header, } from 'semantic-ui-react'
@@ -52,6 +54,22 @@ class Today extends Component {
     else return true;
   }
 
+  handleDelete = (test) => {
+    const {
+      user,
+      subjects,
+    } = this.props;
+    db.ref(`marks-app/${user.uid}/tests/${test.key}`).remove();
+    db.ref(`marks-app/${user.uid}/marks/${test.markId}`).remove();
+    subjects.forEach(subject => {
+      if (test.subjectId === subject.key) {
+        Object.keys(subject.testIds).forEach(testIdKey => {      
+          if (test.key === subject.testIds[testIdKey].testId) db.ref(`marks-app/${user.uid}/subjects/${test.subjectId}/testIds/${testIdKey}`).remove();
+        })
+      }
+    })
+  }
+
 
   render() {
 
@@ -76,7 +94,7 @@ class Today extends Component {
                 <List.Item key={i}>
                   <List>
                     <Header size='small' color='red' >{ testGroup }</Header>
-                    {tests[0] !== false && groupedTests[testGroup].map((test, i) => <TestItem subjects={subjects} key={i} i={i} test={test} handleDelete={() => {}} />)}
+                    {tests[0] !== false && groupedTests[testGroup].map((test, i) => <TestItem subjects={subjects} key={i} i={i} test={test} handleDelete={this.handleDelete} />)}
                   </List>
                 </List.Item>
               )
