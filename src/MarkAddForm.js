@@ -7,6 +7,8 @@ import Mousetrap from 'mousetrap'
 
 import { UserContext } from './App'
 
+import DuedatePicker from './DuedatePicker'
+
 
 const INITIAL_STATE = {
   open: false,
@@ -17,6 +19,10 @@ const INITIAL_STATE = {
   isError: false,
   subjectOptions: [],
   testOptions: [],
+  newTestName: '',
+  newTestDueDate: '',
+  markDueDate: '',
+  onDocClick: true,
 }
 
 class MarkAddForm extends Component {
@@ -74,7 +80,9 @@ class MarkAddForm extends Component {
       subjectInitials,
       subjectId,
       testId,
-      testName,
+      newTestName,
+      newTestDueDate,
+      markDueDate,
     } = this.state;
 
     if (value === '' || subjectId === '') {
@@ -84,12 +92,23 @@ class MarkAddForm extends Component {
       const mark = {
         value: parseFloat(value),
         timestamp: new Date().valueOf(),
-        subjectInitials: testId === 'notest' ? this.getSubjectInitials(subjectId) : this.getSubjectInitials(this.getSubjectId(testId)),
-        subjectId: testId === 'notest' ? subjectId : this.getSubjectId(testId),
+        dueDate: markDueDate,
+        // subjectInitials: testId === 'notest' || testId === 'addtest' ? this.getSubjectInitials(subjectId) : this.getSubjectInitials(this.getSubjectId(testId)),
+        subjectId: testId === 'notest' || testId === 'addtest' ? subjectId : this.getSubjectId(testId),
         testId,
-        testName: this.getTestName(testId),
+      }
+
+      const test = {
+        name: newTestName,
+        dueDate: newTestDueDate,
+        timestamp: new Date().valueOf(),
+        subjectInitials: this.getSubjectInitials(subjectId),
+        subjectId,
       }
   
+      if (newTestName) var newTestId = db.ref(`marks-app/${user.uid}/tests`).push(test).key;
+      if (newTestId) mark.testId = newTestId;
+
       var markId = db.ref(`marks-app/${user.uid}/marks`).push(mark).key;
       if (testId !== 'notest') db.ref(`marks-app/${user.uid}/tests/${mark.testId}`).update({ markValue: parseFloat(value), markId });
       db.ref(`marks-app/${user.uid}/subjects/${mark.subjectId}/markIds`).push({ markId });
@@ -179,12 +198,16 @@ class MarkAddForm extends Component {
 
     let testOptions = [];
 
-    if (!this.props.fromTest) testOptions = [{ key: 0, text: 'No test', value: 'notest', }];
+    var i = 0;
 
+    if (!this.props.fromTest) {
+      testOptions = [{ key: 0, text: 'No test', value: 'notest', }, { key: 1, text: 'Add test', value: 'addtest' }];
+      i = 1;
+    }
     console.log(tests);
     
     if (tests !== undefined) {
-      for (var i = 0; i < tests.length; i++) {
+      for (i; i < tests.length; i++) {
         if (!tests[i].markValue) {
         let test = {
           key: i + 1,
@@ -201,6 +224,16 @@ class MarkAddForm extends Component {
     if (this.props.fromTest) this.setState({ testId: tests[0].key });
   }
 
+  handleOpenChage = (open) => {
+    if (open) this.setState({ onDocClick: false });
+    else {
+      setTimeout(() => {
+        this.setState({ onDocClick: true });
+      }, 150)
+    }
+      
+  }
+
 
   render() {
     const {
@@ -211,6 +244,9 @@ class MarkAddForm extends Component {
       isError,
       subjectOptions,
       testOptions,
+      newTestName,
+      newTestDueDate,
+      markDueDate,
     } = this.state;
 
     const {
@@ -256,7 +292,19 @@ class MarkAddForm extends Component {
               <Form.Input autoFocus value={value} onChange={(e) => this.setState({ value: e.target.value })} label='Add a Grade' placeholder='1-5' width={3}/>
               <Form.Dropdown label='Choose a Test' disabled={fromTest && true} onChange={this.handleTestDropdown} value={testId} placeholder='Choose a Test' search selection options={testOptions}/>              
             </Form.Group>
-              { testId === 'notest' && <Form.Dropdown width={6} disabled={fromSubjectCard && true} label='Choose a Subject' onChange={this.handleSubjectDropdown} value={subjectId} placeholder='Choose a Subject' search selection options={subjectOptions}/> }
+            { testId === 'notest' && ( 
+              <Form.Group>
+                <DuedatePicker onOpenChange={this.handleOpenChage} value={markDueDate} onChange={(e, { value }) => this.setState({ markDueDate: value })} label='Add a Due Date' placeholder='Add a Due Date'/>
+                <Form.Dropdown width={6} disabled={fromSubjectCard && true} label='Choose a Subject' onChange={this.handleSubjectDropdown} value={subjectId} placeholder='Choose a Subject' search selection options={subjectOptions}/> 
+              </Form.Group>
+            )}
+            { testId === 'addtest' && (
+              <Form.Group>
+                <Form.Input autoFocus value={newTestName} onChange={(e) => this.setState({ newTestName: e.target.value })} label='Add a test name' placeholder='' />
+                <DuedatePicker onOpenChange={this.handleOpenChage} value={newTestDueDate} onChange={(e, { value }) => this.setState({ newTestDueDate: value })} label='Add a Due Date' placeholder='Add a Due Date'/>
+                <Form.Dropdown width={6} disabled={fromSubjectCard && true} label='Choose a Subject' onChange={this.handleSubjectDropdown} value={subjectId} placeholder='Choose a Subject' search selection options={subjectOptions}/>
+              </Form.Group>
+              )}
             <Form.TextArea label='!!! NOT YET IMPLEMENTED !!!' />
             {/* <Form.Button onClick={this.handleAdd} positive>Add</Form.Button> */}
             <Message 

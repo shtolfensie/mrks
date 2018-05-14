@@ -192,11 +192,10 @@ class App extends Component {
         marksArr.push({
           value: mark.val().value,
           subjectId: mark.val().subjectId,
-          subjectInitials: mark.val().subjectInitials,
           timestamp: mark.val().timestamp,
+          dueDate: mark.val().dueDate,
           key: mark.key,
           testId: mark.val().testId,
-          testName: mark.val().testName,
         }); 
       });
       this.setState({ marks: marksArr });
