@@ -2,6 +2,9 @@
 
 - try putting test, subject edit form into one component
 
+- show pasts tests in test component
+- dont display todays tests after a certain time - ex. 5pm
+
 ### Subjects
 
 - maybe get subject marks from all marks, not via call to firebase, might be slow and expensive
