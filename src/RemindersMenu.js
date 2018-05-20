@@ -50,9 +50,9 @@ class RemindersMenu extends Component {
                 <Dropdown.Item active={date === 'month'}     onClick={() => this.handleRangeChange('month')}   >This Month</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown.Item>
-            <Dropdown.Item>
+            {/* <Dropdown.Item>
               <Checkbox checked={showGraded} onChange={this.props.handleGradedChange} label='Show graded' />
-            </Dropdown.Item>
+            </Dropdown.Item> */}
           </Dropdown.Menu>
         </Dropdown>
         <RemindersAddForm subjects={subjects} />

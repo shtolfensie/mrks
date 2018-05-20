@@ -32,14 +32,22 @@ export const getFormatedDate = (date) => {
   return moment(Number(date)).format('dddd, D. M. YYYY')
 }
 
-export const isInRange = (test, range) => {
-  let d = moment(Number(test.dueDate));
+export const isInRange = (ob, range) => {
+  let d = moment(Number(ob.dueDate));
   let today = moment().format('MM-DD-YYYY');
   
   if (range === 'today' && d.diff(today, 'days') === 0) return true;
   else if (range === 'tomorrow' && d.diff(today, 'days') === 1) return true;
   else if (range === 'week' && d.diff(today, 'weeks') === 0) return true;
   else if (range === 'month' && d.diff(today, 'months') === 0) return true;
-  else if (range === 'upcoming' && d.diff(today, 'days') >= 0) return true;
+  else if (range === 'upcoming' && d.diff(today, 'days') >= 0 && (d.diff(today, 'days') !== 0 || moment().hour() < 12 || ob.type !== 'test')) return true; // don't display today's test in upcoming if it's 5pm or later
+  else if (range === 'previous2weeks' && d.diff(today, 'days') <= 0 && d.diff(today, 'days') >= -14) return true;
   else return false; 
 }
+
+
+// long form version of upcoming filter
+// else if (range === 'upcoming' && d.diff(today, 'days') >= 0) {
+//   if (d.diff(today, 'days') === 0 && moment().hour() > 12) return false;
+//   else return true;
+//  }

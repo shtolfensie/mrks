@@ -129,7 +129,8 @@ class App extends Component {
           key: test.key,
           markValue: test.val().markValue ? test.val().markValue : undefined,
           // markId: test.val().markId ? test.val().markId : undefined,
-          markId: test.val().markId,          
+          markId: test.val().markId,
+          type: 'test',        
         }); 
       });
       this.setState({ tests: testsArr });
@@ -153,6 +154,7 @@ class App extends Component {
           timestamp: homework.val().timestamp,
           key: homework.key,
           // markId: test.val().markId ? test.val().markId : undefined,
+          type: 'homework',
         }); 
       });
       this.setState({ homework: homeworkArr });
@@ -175,6 +177,7 @@ class App extends Component {
           timestamp: reminder.val().timestamp,
           key: reminder.key,
           // markId: test.val().markId ? test.val().markId : undefined,
+          type: 'reminder',
         }); 
       });
       this.setState({ reminders: remindersArr });

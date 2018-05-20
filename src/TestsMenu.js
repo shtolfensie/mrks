@@ -44,6 +44,7 @@ class TestsMenu extends Component {
               <Dropdown.Menu>
                 <Dropdown.Item active={date === false} onClick={() => this.handleRangeChange(false)}>All</Dropdown.Item>
                 <Dropdown.Item active={date === 'upcoming'}  onClick={() => this.handleRangeChange('upcoming')}>Upcoming</Dropdown.Item>
+                <Dropdown.Item active={date === 'previous2weeks'}  onClick={() => this.handleRangeChange('previous2weeks')}>Previous two weeks</Dropdown.Item>
                 <Dropdown.Item active={date === 'today'}     onClick={() => this.handleRangeChange('today')}   >Today</Dropdown.Item>
                 <Dropdown.Item active={date === 'tomorrow'}  onClick={() => this.handleRangeChange('tomorrow')}>Tomorrow</Dropdown.Item>
                 <Dropdown.Item active={date === 'week'}      onClick={() => this.handleRangeChange('week')}    >This Week</Dropdown.Item>
