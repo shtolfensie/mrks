@@ -2,6 +2,8 @@
 
 - try putting test, subject edit form into one component
 
+- display either name of day or entire date after duedate delta in test, homewrok and reminders
+
 ### Subjects
 
 - maybe get subject marks from all marks, not via call to firebase, might be slow and expensive
