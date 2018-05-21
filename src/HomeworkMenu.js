@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import { Checkbox, Menu, Dropdown, Icon, Input, } from 'semantic-ui-react'
 
-import RemindersAddForm from './RemindersAddForm'
+import HomeworkAddForm from './RemindersAddForm'
 
 class HomeworkMenu extends Component {
 
@@ -55,7 +55,7 @@ class HomeworkMenu extends Component {
             </Dropdown.Item> */}
           </Dropdown.Menu>
         </Dropdown>
-        <RemindersAddForm subjects={subjects} />
+        <HomeworkAddForm subjects={subjects} />
         <Menu.Item position='right' >
           <Input style={{width: '9rem'}} icon='search' transparent placeholder='Search homework...' onChange={handleSearchFilterChange} />
         </Menu.Item>

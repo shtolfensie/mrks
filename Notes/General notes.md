@@ -4,6 +4,8 @@
 
 - display either name of day or entire date after duedate delta in test, homewrok and reminders
 
+- mark edit form
+
 ### Subjects
 
 - maybe get subject marks from all marks, not via call to firebase, might be slow and expensive

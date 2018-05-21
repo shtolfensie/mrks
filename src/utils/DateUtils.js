@@ -40,7 +40,7 @@ export const isInRange = (ob, range) => {
   else if (range === 'tomorrow' && d.diff(today, 'days') === 1) return true;
   else if (range === 'week' && d.diff(today, 'weeks') === 0) return true;
   else if (range === 'month' && d.diff(today, 'months') === 0) return true;
-  else if (range === 'upcoming' && d.diff(today, 'days') >= 0 && (d.diff(today, 'days') !== 0 || moment().hour() < 12 || ob.type !== 'test')) return true; // don't display today's test in upcoming if it's 5pm or later
+  else if (range === 'upcoming' && d.diff(today, 'days') >= 0 && (d.diff(today, 'days') !== 0 || moment().hour() < 17 || ob.type !== 'test')) return true; // don't display today's test in upcoming if it's 5pm or later
   else if (range === 'previous2weeks' && d.diff(today, 'days') <= 0 && d.diff(today, 'days') >= -14) return true;
   else return false; 
 }
