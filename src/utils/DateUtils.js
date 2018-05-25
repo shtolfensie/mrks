@@ -45,6 +45,15 @@ export const isInRange = (ob, range) => {
   else return false; 
 }
 
+export const getDayDeltaName = (dueDate) => {
+  let d = moment(Number(dueDate));
+  let today = moment().format('MM-DD-YYYY');
+  let diff = d.diff(today, 'days');
+
+  if (diff <= 5 && diff >= 0) return d.format('dddd')
+  else return getFormatedDate(d)
+}
+
 
 // long form version of upcoming filter
 // else if (range === 'upcoming' && d.diff(today, 'days') >= 0) {

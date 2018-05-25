@@ -188,7 +188,7 @@ class Tests extends Component {
             return (
               <List.Item key={i}>
                 {/* { groupBy === 'dueDate' && <Header size='small' color='red' >{ new Date(Number(testGroup)).toDateString() }</Header> } */}
-                { groupBy === 'dueDate' && <Header size='small' color='red' >{ DateUtils.getDayDelta(testGroup) }</Header> }                
+                { groupBy === 'dueDate' && <Header size='small' color='red' >{ DateUtils.getDayDelta(testGroup) } <span style={{color: 'gray', fontWeight: '500'}}>{DateUtils.getDayDeltaName(testGroup)}</span></Header>}                
                 { groupBy === 'subjectInitials' && <Header size='small' color='red' >{ testGroup }</Header> }
 
                 <List divided relaxed size='large'>
