@@ -178,6 +178,7 @@ class App extends Component {
           key: reminder.key,
           // markId: test.val().markId ? test.val().markId : undefined,
           type: 'reminder',
+          done: reminder.val().done,
         }); 
       });
       this.setState({ reminders: remindersArr });

@@ -2,8 +2,6 @@
 
 - try putting test, subject edit form into one component
 
-- display either name of day or entire date after duedate delta in test, homewrok and reminders
-
 - mark edit form
 
 ### Subjects

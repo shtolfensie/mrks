@@ -93,7 +93,7 @@ class Reminders extends Component {
         })
       }
     })
-    db.ref(`marks-app/${user.uid}/reminders/${reminder.key}`).remove();    
+    db.ref(`marks-app/${user.uid}/reminders/${reminder.key}`).remove();
   }
 
   getFilteredReminders = (doFilter) => {
@@ -147,8 +147,15 @@ class Reminders extends Component {
     if (!filterBy.showGraded && ob.markValue) return false;
     else if (filterBy.subject && ob.subjectInitials !== filterBy.subject) return false;
     else if (filterBy.search && ob.name !== filterBy.search) return false;
-    else if (filterBy.date !== false && !DateUtils.isInRange(ob, filterBy.date)) return false;
+    else if (filterBy.date !== false && !DateUtils.isInRange(ob, filterBy.date)) {
+      if (DateUtils.getDateDelta(ob.dueDate) < 0 && !ob.done) return true;
+      return false;
+    }
     else return true;
+  }
+
+  handleDone = (reminder) => {
+    db.ref(`marks-app/${this.props.user.uid}/reminders/${reminder.key}`).update({ done: Date.now().valueOf() });
   }
 
   render() {
@@ -189,7 +196,7 @@ class Reminders extends Component {
                 { groupBy === 'subjectInitials' && <Header size='small' color='red' >{ remindersGroup }</Header> }
 
                 <List divided relaxed size='large'>
-                  { reminders[0] !== false && groupedReminders[remindersGroup].map((reminder, i) => <ReminderItem subjects={subjects} key={i} i={i} reminder={reminder} handleDelete={this.handleDelete} />) }
+                  { reminders[0] !== false && groupedReminders[remindersGroup].map((reminder, i) => <ReminderItem subjects={subjects} key={i} i={i} reminder={reminder} handleDelete={this.handleDelete} handleDone={this.handleDone}/>) }
                 </List>
               </List.Item>
             )
@@ -207,10 +214,16 @@ class Reminders extends Component {
 </List> */}
 
 
-const ReminderItem = ({ reminder, i, handleDelete, subjects }) =>
+const styles = {
+  ReminderItemHeaderDone: {color: 'green', textDecoration: 'line-through'},
+  ReminderItemHeaderOverdue : {color: 'red'}
+}
+
+
+const ReminderItem = ({ reminder, i, handleDelete, handleDone, subjects }) =>
   <List.Item key={i}>
     <List.Content floated='left'>
-      <Header size='small' content={reminder.name}/>
+      <Header size='small' content={reminder.name} style={reminder.done ? styles.ReminderItemHeaderDone : DateUtils.getDateDelta(reminder.dueDate) < 0 ? styles.ReminderItemHeaderOverdue : {} }/>
       <div style={{marginLeft: '0.3rem', color: 'rgba(0, 0, 0, 0.7)'}}>
         <div style={{fontSize: '1.2rem'}} >{reminder.subjectInitials}</div>
         <div style={{fontSize: '1.2rem'}}>{ DateUtils.getFormatedDate(reminder.dueDate) }</div>
@@ -219,6 +232,7 @@ const ReminderItem = ({ reminder, i, handleDelete, subjects }) =>
     </List.Content>
     <List.Content floated='right'>
       {/* { !homework.markValue ? <MarkAddForm subjects={subjects} tests={[test]} fromTest> <Icon link name='checkmark' /> </MarkAddForm> : <Icon name='checkmark' color='green'/> } */}
+      <Icon link name='checkmark' onClick={() => handleDone(reminder)}/>
       <RemindersEditForm subjects={subjects} reminder={reminder} > <Icon link name='edit' /> </RemindersEditForm>
       <DeleteConfirmModal handleConfirm={() => handleDelete(reminder)} > <Icon link name='trash outline' /> </DeleteConfirmModal>
     </List.Content>

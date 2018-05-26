@@ -14,6 +14,7 @@ const INITIAL_STATE = {
   name: '',
   dueDate: '',
   subjectId: '',
+  done: '',
   isError: false,
   subjectOptions: [],
   onDocClick: true,
@@ -57,6 +58,7 @@ class RemindersEditForm extends Component {
       name,
       dueDate,
       subjectId,
+      done,
       subjectInitials,
     } = this.state;
 
@@ -67,6 +69,7 @@ class RemindersEditForm extends Component {
       const reminder = {
         name,
         dueDate,
+        done,
         timestamp: new Date().valueOf(),
         subjectInitials: this.getSubjectInitials(subjectId),
         subjectId,
@@ -167,6 +170,7 @@ class RemindersEditForm extends Component {
       name,
       dueDate,
       subjectId,
+      done,
       isError,
       subjectOptions,
       onDocClick,
@@ -207,6 +211,7 @@ class RemindersEditForm extends Component {
                 <DuedatePicker fromEdit onOpenChange={this.handleOpenChage} value={dueDate} onChange={(e, { value }) => this.setState({ dueDate: value })} label='Add a Due Date' placeholder='Add a Due Date'/>
                 <Form.Dropdown disabled={fromSubjectCard && true} label='Choose a Subject' onChange={this.handleDropdown} value={subjectId} placeholder='Choose a Subject' search selection options={subjectOptions}/>
               </Form.Group>
+              <Form.Checkbox checked={!!done} onClick={() => this.setState({ done: !done })} label='Done'/>
               <Form.TextArea label='Description' placeholder='!!! NOT YET IMPLEMENTED !!!' autoHeight style={{ maxHeight: 300 }} rows={3}/>
               {/* <Form.Button onClick={this.handleAdd} positive>Add</Form.Button> */}
               <Message 

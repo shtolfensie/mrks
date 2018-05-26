@@ -2,7 +2,7 @@ import moment from 'moment'
 import 'moment/locale/cs'
 import { toASCII } from 'punycode';
 
-moment.locale('cs');
+moment.locale('en'); // this changes the date local for the entire app
 
 
 export const getDuedate = (dateText) => {
@@ -11,6 +11,14 @@ export const getDuedate = (dateText) => {
   if (dateText === 'today') return d.valueOf()
   else if (dateText === 'tomorrow') return  d.setDate(d.getDate() + 1)
   else if (dateText === 'nextWeek') return d.setDate(d.getDate() + 7)
+}
+
+export const getDateDelta = (dueDate) => {
+  let d = moment(Number(dueDate));
+  let today = moment().format('MM-DD-YYYY');
+  let diff = d.diff(today, 'days');
+
+  return diff;
 }
 
 export const getDayDelta = (dueDate) => {

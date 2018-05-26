@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import { Checkbox, Menu, Dropdown, Icon, Input, } from 'semantic-ui-react'
 
-import HomeworkAddForm from './RemindersAddForm'
+import HomeworkAddForm from './HomeworkAddForm'
 
 class HomeworkMenu extends Component {
 

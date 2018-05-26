@@ -36,6 +36,15 @@ class Tests extends Component {
     };
   }
 
+  styles = {
+    dueDateName: {
+      color: 'gray',
+      fontWeight: '400',
+      fontStyle: 'italic',
+      marginLeft: '.3rem'
+    }
+  }
+
   componentDidMount() {
     const { settings } = this.props;
     this.getFilteredTests(this.doFilter);
@@ -188,7 +197,11 @@ class Tests extends Component {
             return (
               <List.Item key={i}>
                 {/* { groupBy === 'dueDate' && <Header size='small' color='red' >{ new Date(Number(testGroup)).toDateString() }</Header> } */}
-                { groupBy === 'dueDate' && <Header size='small' color='red' >{ DateUtils.getDayDelta(testGroup) } <span style={{color: 'gray', fontWeight: '500'}}>{DateUtils.getDayDeltaName(testGroup)}</span></Header>}                
+                { groupBy === 'dueDate' && (
+                  <Header size='small' color='red' >{ DateUtils.getDayDelta(testGroup) }
+                    <span style={this.styles.dueDateName}>{DateUtils.getDayDeltaName(testGroup)}</span>
+                  </Header>
+                )}                
                 { groupBy === 'subjectInitials' && <Header size='small' color='red' >{ testGroup }</Header> }
 
                 <List divided relaxed size='large'>

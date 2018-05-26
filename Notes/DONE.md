@@ -32,3 +32,5 @@ _DONE_ ~~**Or maybe just use a 'pen'/'edit' icon and use it to open a modal.**~~
 
 - ~~show pasts tests in test component~~
 - ~~dont display todays tests after a certain time - ex. 5pm~~
+
+- ~~display either name of day or entire date after duedate delta in test, homewrok and reminders~~
