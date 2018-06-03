@@ -4,6 +4,8 @@
 
 - mark edit form
 
+- previous tests grouped by month, not finished. should display X months ago. should also dispaly year
+
 ### Subjects
 
 - maybe get subject marks from all marks, not via call to firebase, might be slow and expensive

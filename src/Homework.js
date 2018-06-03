@@ -225,3 +225,7 @@ const HomeworkItem = ({ homework, i, handleDelete, subjects }) =>
   </List.Item>
 
 export default Homework;
+
+export {
+  HomeworkItem
+};

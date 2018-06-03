@@ -5,6 +5,7 @@ import { Header, Grid, Segment, } from 'semantic-ui-react'
 import { UserContext } from './App'
 
 import Today from './Today'
+import UnmarkedTests from './UnmarkedTests'
 
 class Home extends Component {
   
@@ -13,6 +14,8 @@ class Home extends Component {
   render() {
   const {
     tests,
+    reminders,
+    homework,
     subjects,
   } = this.props;
 
@@ -22,7 +25,7 @@ class Home extends Component {
           <Grid padded>
             <Grid.Row columns={3}>
               <Grid.Column>
-                <Today user={user} tests={tests} subjects={subjects} />
+                <Today user={user} tests={tests} reminders={reminders} homework={homework} subjects={subjects} />
               </Grid.Column>
               <Grid.Column>
                 <Segment>
@@ -31,6 +34,11 @@ class Home extends Component {
                 </Segment>
               </Grid.Column>
               <Grid.Column></Grid.Column>
+            </Grid.Row>
+            <Grid.Row columns={3}>
+              <Grid.Column>
+                <UnmarkedTests user={user} tests={tests} subjects={subjects} />
+              </Grid.Column>
             </Grid.Row>
           </Grid>
         )}

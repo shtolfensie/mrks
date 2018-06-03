@@ -117,9 +117,21 @@ class Tests extends Component {
   }
 
   getGroupedTests = (groupBy) => {
-    this.setState({
-      groupedTests: _.groupBy(this.state.filteredTests, groupBy)
-    })
+    // this.setState({
+    //   groupedTests: _.groupBy(this.state.filteredTests, groupBy)
+    // });
+    let groupedTests = _.groupBy(this.state.filteredTests, groupBy);
+    let newGroupedTests = {};
+    Object.keys(groupedTests).forEach(groupedTest => {
+      console.log(groupedTest);
+      
+      if (DateUtils.getDateDelta(groupedTest) < -10) {
+        newGroupedTests[DateUtils.getMonth(groupedTest)] = groupedTests[groupedTest];
+      }
+      else newGroupedTests[groupedTest] = groupedTests[groupedTest];
+    });
+    console.log(newGroupedTests)
+    this.setState({ groupedTests: newGroupedTests })
   }
 
   handleGroupByChange = (groupBy) => {

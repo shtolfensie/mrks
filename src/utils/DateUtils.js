@@ -22,6 +22,8 @@ export const getDateDelta = (dueDate) => {
 }
 
 export const getDayDelta = (dueDate) => {
+
+  if (dueDate >= 0 && dueDate <= 11) return `${moment().month(dueDate).format("MMMM")}`
   let d = moment(Number(dueDate));
   let today = moment().format('MM-DD-YYYY');
   let diff = d.diff(today, 'days');
@@ -50,6 +52,7 @@ export const isInRange = (ob, range) => {
   else if (range === 'month' && d.diff(today, 'months') === 0) return true;
   else if (range === 'upcoming' && d.diff(today, 'days') >= 0 && (d.diff(today, 'days') !== 0 || moment().hour() < 17 || ob.type !== 'test')) return true; // don't display today's test in upcoming if it's 5pm or later
   else if (range === 'previous2weeks' && d.diff(today, 'days') <= 0 && d.diff(today, 'days') >= -14) return true;
+  else if (range === 'previous' && d.diff(today, 'days') < 0) return true;
   else return false; 
 }
 
@@ -59,7 +62,13 @@ export const getDayDeltaName = (dueDate) => {
   let diff = d.diff(today, 'days');
 
   if (diff <= 5 && diff >= 0) return d.format('dddd')
-  else return getFormatedDate(d)
+  // else return getFormatedDate(d)
+  else return '';
+}
+
+export const getMonth = (date) => {
+  let d = moment(Number(date));
+  return d.month();
 }
 
 

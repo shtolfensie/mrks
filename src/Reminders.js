@@ -239,3 +239,8 @@ const ReminderItem = ({ reminder, i, handleDelete, handleDone, subjects }) =>
   </List.Item>
 
 export default Reminders;
+
+export {
+  ReminderItem,
+  styles
+};
