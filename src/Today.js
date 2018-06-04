@@ -87,7 +87,7 @@ class Today extends Component {
       <div>
         <Header content="Today's agenda" attached='top' size='large' />
         <Segment attached='bottom'>
-          { tests.length === 0 && <div style={{ textAlign: 'center' }}>There are no events for today.</div> }
+          { !filteredTests && <div style={{ textAlign: 'center' }}>There are no events for today.</div> }
           <List >
             { groupedTests && Object.keys(groupedTests).map((testGroup, i) => {
               return (
