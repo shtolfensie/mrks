@@ -198,25 +198,25 @@ class MarkAddForm extends Component {
 
     let testOptions = [];
 
-    var i = 0;
+    var j = 0;
 
     if (!this.props.fromTest) {
       testOptions = [{ key: 0, text: 'No test', value: 'notest', }, { key: 1, text: 'Add test', value: 'addtest' }];
-      i = 1;
+      j = 1;
     }
     console.log(tests);
     
     if (tests !== undefined) {
-      for (i; i < tests.length; i++) {
+      for (let i = 0; i < tests.length; i++) {
         if (!tests[i].markValue) {
-        let test = {
-          key: i + 1,
-          text: tests[i].name,
-          value: tests[i].key,
-        };
-        testOptions.push(test);
-      }
-        
+          let test = {
+            key: j + 1,
+            text: tests[i].name,
+            value: tests[i].key,
+          };
+          j++;
+          testOptions.push(test);
+        }
       }
     }
 
